@@ -40,7 +40,13 @@
     <string name="settings_about">このアプリについて</string>
     <string name="about_title">このアプリについて</string>
     <string name="about_version">バージョン %1$s</string>
-    <string name="about_credits">このアプリでは以下を使用しています：\n\n• YARA-X（FoxRefire）- マルウェア検出のためのパターンマッチング\n• yara-forge ルール（YARAHQ）- コミュニティYARAルール集\n\nAndroLibreAVは、インストール済みアプリをYARAルールでスキャンし、潜在的に悪意のあるアプリケーションの特定を支援します。</string>
+    <string name="about_license_label">ライセンス</string>
+    <string name="about_license">GNU Affero General Public License v3.0 (AGPL-3.0)\n\n本アプリはフリーソフトウェアです。AGPL-3.0の条項に従い、再頒布および改変が可能です。</string>
+    <string name="about_github_label">ソースコード</string>
+    <string name="about_link_app">AndroLibreAV (FoxRefire)</string>
+    <string name="about_link_yarax">YARA-X (VirusTotal)</string>
+    <string name="about_link_yaraforge">yara-forge (YARAHQ)</string>
+    <string name="about_credits">このアプリでは以下を使用しています：\n\n• YARA-X- マルウェア検出のためのパターンマッチング\n• yara-forge ルール- コミュニティYARAルール集\n\nAndroLibreAVは、インストール済みアプリをYARAルールでスキャンし、潜在的に悪意のあるアプリケーションの特定を支援します。</string>
     <string name="threat_details">検出の詳細</string>
     <string name="detections_by_file">ファイル別の検出一覧</string>
     <string name="uninstall">アンインストール</string>

@@ -11,15 +11,93 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <ImageView
+            android:id="@+id/appIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_about_app"
+            android:scaleType="fitCenter"
+            android:layout_marginBottom="8dp" />
+
         <TextView
             android:id="@+id/versionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textSize="16sp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="24dp" />
 
         <TextView
-            android:id="@+id/creditsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_license_label"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/licenseText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_license"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_github_label"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/linkApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_link_app"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp"
+            android:paddingVertical="4dp"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawablePadding="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground" />
+
+        <TextView
+            android:id="@+id/linkYaraX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_link_yarax"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp"
+            android:paddingVertical="4dp"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawablePadding="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground" />
+
+        <TextView
+            android:id="@+id/linkYaraForge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_link_yaraforge"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp"
+            android:paddingVertical="4dp"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawablePadding="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/about_credits"
