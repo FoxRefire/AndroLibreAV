@@ -1,5 +1,6 @@
 package com.example.yaraxsample
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -40,6 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.updateRulesButton.setOnClickListener { updateRules() }
         binding.scanButton.setOnClickListener { startScan() }
+        binding.customRulesButton.setOnClickListener {
+            startActivity(Intent(this, CustomRulesActivity::class.java))
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestQueryAllPackagesIfNeeded()
@@ -71,11 +75,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateStatusFromRules() {
-        binding.statusText.text = if (rulesRepo.hasRules()) {
+        binding.statusText.text = if (rulesRepo.hasAnyRules()) {
             getString(R.string.status_ready).replace("ルールを更新してから", "スキャンを")
         } else {
             getString(R.string.status_ready)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateStatusFromRules()
     }
 
     private fun updateRules() {
@@ -102,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startScan() {
-        if (!rulesRepo.hasRules()) {
+        if (!rulesRepo.hasAnyRules()) {
             Toast.makeText(this, getString(R.string.status_ready), Toast.LENGTH_LONG).show()
             return
         }
@@ -115,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         resultsAdapter.submitList(emptyList())
 
         lifecycleScope.launch {
-            scanEngine.scan(rulesRepo.rulesDir)
+            scanEngine.scan(rulesRepo)
                 .catch { e ->
                     binding.statusText.text = "エラー: ${e.message}"
                     binding.scanButton.isEnabled = true

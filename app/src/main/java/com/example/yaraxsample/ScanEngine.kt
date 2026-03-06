@@ -34,9 +34,10 @@ class ScanEngine(private val context: Context) {
 
     /**
      * Run full scan. Emits progress updates and final results.
+     * Uses both yara-forge rules and user-defined custom rules from the repository.
      */
-    fun scan(rulesDir: File): Flow<ScanProgress> = flow {
-        val rules = loadRules(rulesDir) ?: run {
+    fun scan(rulesRepo: RulesRepository): Flow<ScanProgress> = flow {
+        val rules = loadRules(rulesRepo) ?: run {
             emit(ScanProgress(0, 0, null, emptyList()))
             return@flow
         }
@@ -102,19 +103,33 @@ class ScanEngine(private val context: Context) {
         emit(ScanProgress(total, total, null, results))
     }.flowOn(Dispatchers.IO)
 
-    private suspend fun loadRules(rulesDir: File): YaraRules? = withContext(Dispatchers.IO) {
-        val paths = rulesDir.walkTopDown()
-            .filter { it.isFile && it.extension.equals("yar", ignoreCase = true) }
-            .map { it.absolutePath }
-            .toList()
+    private suspend fun loadRules(rulesRepo: RulesRepository): YaraRules? = withContext(Dispatchers.IO) {
+        val paths = mutableListOf<String>()
+
+        // Yara-forge rules from downloaded zip
+        val rulesDir = rulesRepo.rulesDir
+        if (rulesDir.exists()) {
+            paths.addAll(
+                rulesDir.walkTopDown()
+                    .filter { it.isFile && it.extension.equals("yar", ignoreCase = true) }
+                    .map { it.absolutePath }
+            )
+        }
+
+        // User-defined custom rules (stored separately, not wiped on yara-forge update)
+        val customFile = rulesRepo.customRulesFile
+        if (customFile.exists() && customFile.readText().isNotBlank()) {
+            paths.add(customFile.absolutePath)
+        }
 
         if (paths.isEmpty()) {
-            Log.e(TAG, "No .yar files found in $rulesDir")
+            Log.e(TAG, "No rule files found (yara-forge or custom)")
             return@withContext null
         }
 
-        Log.d(TAG, "Compiling ${paths.size} rule files")
-        YaraX.compileFromPaths(paths, rulesDir.absolutePath)
+        val includeDir = if (rulesDir.exists()) rulesDir.absolutePath else rulesRepo.customRulesFile.parentFile!!.absolutePath
+        Log.d(TAG, "Compiling ${paths.size} rule files (include: $includeDir)")
+        YaraX.compileFromPaths(paths, includeDir)
     }
 
     private fun getInstalledApps(): List<ApplicationInfo> {

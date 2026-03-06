@@ -10,4 +10,9 @@
     <string name="rules_update_failed">ルールの更新に失敗しました</string>
     <string name="downloading_rules">ルールをダウンロード中…</string>
     <string name="scanning">スキャン中: %1$d / %2$d</string>
+    <string name="custom_rules">カスタムルール</string>
+    <string name="custom_rules_title">カスタムYARAルール</string>
+    <string name="custom_rules_hint">YARAルールを入力（複数ルール可）</string>
+    <string name="save_custom_rules">保存</string>
+    <string name="custom_rules_saved">カスタムルールを保存しました</string>
 </resources>

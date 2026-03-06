@@ -20,7 +20,14 @@ class RulesRepository(private val context: Context) {
         private const val TAG = "RulesRepository"
         const val RULES_URL = "https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-full.zip"
         private const val RULES_DIR_NAME = "yara_rules"
+        private const val CUSTOM_RULES_FILE = "custom_rules.yar"
     }
+
+    /**
+     * File where user-defined YARA rules are stored (persists across yara-forge updates).
+     */
+    val customRulesFile: File
+        get() = File(context.filesDir, CUSTOM_RULES_FILE)
 
     /**
      * Directory where extracted .yar files are stored.
@@ -29,13 +36,18 @@ class RulesRepository(private val context: Context) {
         get() = File(context.filesDir, RULES_DIR_NAME)
 
     /**
-     * Check if rules have been downloaded.
+     * Check if yara-forge rules have been downloaded.
      */
     fun hasRules(): Boolean {
         val dir = rulesDir
         if (!dir.exists()) return false
         return dir.walkTopDown().any { it.isFile && it.extension == "yar" }
     }
+
+    /**
+     * Check if any rules are available for scanning (yara-forge or custom).
+     */
+    fun hasAnyRules(): Boolean = hasRules() || hasCustomRules()
 
     /**
      * Download the rules ZIP and extract to rulesDir.
@@ -121,4 +133,23 @@ class RulesRepository(private val context: Context) {
             .map { it.absolutePath }
             .toList()
     }
+
+    /**
+     * Save user-defined YARA rules. Stored separately from yara-forge (not wiped on update).
+     */
+    fun saveCustomRules(rulesText: String) {
+        customRulesFile.writeText(rulesText, Charsets.UTF_8)
+    }
+
+    /**
+     * Load user-defined YARA rules.
+     */
+    fun loadCustomRules(): String {
+        return if (customRulesFile.exists()) customRulesFile.readText(Charsets.UTF_8) else ""
+    }
+
+    /**
+     * Check if user has defined custom rules.
+     */
+    fun hasCustomRules(): Boolean = customRulesFile.exists() && customRulesFile.readText().isNotBlank()
 }
