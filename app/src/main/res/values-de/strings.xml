@@ -47,4 +47,6 @@
     <string name="app_info">App-Info</string>
     <string name="uninstall_open">Öffnet Deinstallationsbildschirm</string>
     <string name="app_info_open">Öffnet App-Einstellungen</string>
+    <string name="settings_skip_system_apps">System-Apps überspringen</string>
+    <string name="settings_skip_system_apps_desc">Wenn aktiviert, werden nur vom Benutzer installierte Apps gescannt; System-Apps werden ausgeschlossen.</string>
 </resources>

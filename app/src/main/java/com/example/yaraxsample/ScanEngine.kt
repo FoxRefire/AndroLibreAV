@@ -43,7 +43,8 @@ class ScanEngine(private val context: Context) {
             return@flow
         }
 
-        val apps = getInstalledApps()
+        val skipSystemApps = ScanPreferences.getSkipSystemApps(context)
+        val apps = getInstalledApps(skipSystemApps)
         val total = apps.size
         val results = mutableListOf<ScanResult>()
         var scanned = 0
@@ -134,11 +135,14 @@ class ScanEngine(private val context: Context) {
         YaraX.compileFromPaths(paths, includeDir)
     }
 
-    private fun getInstalledApps(): List<ApplicationInfo> {
+    private fun getInstalledApps(skipSystemApps: Boolean): List<ApplicationInfo> {
         val pm = context.packageManager
         return try {
             pm.getInstalledApplications(PackageManager.GET_META_DATA)
                 .filter { it.sourceDir.isNotEmpty() }
+                .filter { app ->
+                    !skipSystemApps || (app.flags and ApplicationInfo.FLAG_SYSTEM) == 0
+                }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get installed apps", e)
             emptyList()

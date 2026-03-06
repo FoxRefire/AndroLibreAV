@@ -47,4 +47,6 @@
     <string name="app_info">應用程式資訊</string>
     <string name="uninstall_open">開啟解除安裝畫面</string>
     <string name="app_info_open">開啟應用程式設定</string>
+    <string name="settings_skip_system_apps">略過系統應用程式</string>
+    <string name="settings_skip_system_apps_desc">啟用時僅掃描使用者安裝的應用程式，系統應用程式將被排除。</string>
 </resources>

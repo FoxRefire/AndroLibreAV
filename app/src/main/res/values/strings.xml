@@ -46,6 +46,8 @@
     <string name="uninstall">Uninstall</string>
     <string name="app_info">App info</string>
     <string name="uninstall_open">Opens uninstall screen</string>
+    <string name="settings_skip_system_apps">Skip system apps</string>
+    <string name="settings_skip_system_apps_desc">When enabled, only user-installed apps are scanned; system apps are excluded.</string>
     <string name="app_info_open">Opens app settings</string>
 </resources>
 

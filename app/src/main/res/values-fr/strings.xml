@@ -47,4 +47,6 @@
     <string name="app_info">Infos app</string>
     <string name="uninstall_open">Ouvre l\'écran de désinstallation</string>
     <string name="app_info_open">Ouvre les paramètres de l\'app</string>
+    <string name="settings_skip_system_apps">Ignorer les applications système</string>
+    <string name="settings_skip_system_apps_desc">Si activé, seules les applications installées par l\'utilisateur sont analysées ; les applications système sont exclues.</string>
 </resources>

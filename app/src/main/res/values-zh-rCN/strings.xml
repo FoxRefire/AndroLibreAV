@@ -47,4 +47,6 @@
     <string name="app_info">应用信息</string>
     <string name="uninstall_open">打开卸载界面</string>
     <string name="app_info_open">打开应用设置</string>
+    <string name="settings_skip_system_apps">跳过系统应用</string>
+    <string name="settings_skip_system_apps_desc">启用时仅扫描用户安装的应用，系统应用将被排除。</string>
 </resources>

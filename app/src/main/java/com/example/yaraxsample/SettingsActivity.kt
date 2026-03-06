@@ -40,6 +40,11 @@ class SettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        binding.skipSystemAppsSwitch.isChecked = ScanPreferences.getSkipSystemApps(this)
+        binding.skipSystemAppsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            ScanPreferences.setSkipSystemApps(this, isChecked)
+        }
+
         binding.customRulesButton.setOnClickListener {
             startActivity(Intent(this, CustomRulesActivity::class.java))
         }

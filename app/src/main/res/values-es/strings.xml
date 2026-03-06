@@ -47,4 +47,6 @@
     <string name="app_info">Info de la app</string>
     <string name="uninstall_open">Abre la pantalla de desinstalación</string>
     <string name="app_info_open">Abre la configuración de la app</string>
+    <string name="settings_skip_system_apps">Omitir aplicaciones del sistema</string>
+    <string name="settings_skip_system_apps_desc">Cuando está activo, solo se escanean aplicaciones instaladas por el usuario; las del sistema se excluyen.</string>
 </resources>

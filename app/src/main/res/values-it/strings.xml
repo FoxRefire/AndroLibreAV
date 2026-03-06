@@ -47,4 +47,6 @@
     <string name="app_info">Info app</string>
     <string name="uninstall_open">Apre schermata disinstallazione</string>
     <string name="app_info_open">Apre impostazioni app</string>
+    <string name="settings_skip_system_apps">Escludi app di sistema</string>
+    <string name="settings_skip_system_apps_desc">Se attivato, vengono scansionate solo le app installate dall\'utente; le app di sistema sono escluse.</string>
 </resources>

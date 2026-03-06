@@ -47,4 +47,6 @@
     <string name="app_info">アプリ情報</string>
     <string name="uninstall_open">アンインストール画面を開く</string>
     <string name="app_info_open">アプリ設定を開く</string>
+    <string name="settings_skip_system_apps">システムアプリをスキャンしない</string>
+    <string name="settings_skip_system_apps_desc">有効にするとユーザーがインストールしたアプリのみスキャンし、システムアプリは除外されます。</string>
 </resources>
