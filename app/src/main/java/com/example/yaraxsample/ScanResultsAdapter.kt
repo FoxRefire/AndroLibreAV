@@ -1,5 +1,6 @@
 package com.example.yaraxsample
 
+import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,7 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yaraxsample.databinding.ItemScanResultBinding
 
-class ScanResultsAdapter : ListAdapter<ScanResult, ScanResultsAdapter.ViewHolder>(DiffCallback()) {
+class ScanResultsAdapter(
+    private val packageManager: PackageManager,
+    private val onItemClick: (ScanResult) -> Unit
+) : ListAdapter<ScanResult, ScanResultsAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemScanResultBinding.inflate(
@@ -15,29 +19,37 @@ class ScanResultsAdapter : ListAdapter<ScanResult, ScanResultsAdapter.ViewHolder
             parent,
             false
         )
-        return ViewHolder(binding)
+        return ViewHolder(binding, packageManager, onItemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemScanResultBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(
+        private val binding: ItemScanResultBinding,
+        private val packageManager: PackageManager,
+        private val onItemClick: (ScanResult) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(result: ScanResult) {
+            binding.root.setOnClickListener { onItemClick(result) }
+
+            try {
+                binding.appIcon.setImageDrawable(packageManager.getApplicationIcon(result.packageName))
+            } catch (e: PackageManager.NameNotFoundException) {
+                binding.appIcon.setImageResource(android.R.drawable.sym_def_app_icon)
+            }
+
             binding.appNameText.text = result.appName
             binding.packageText.text = result.packageName
 
-            val matchLines = result.matches.flatMap { fm ->
-                fm.ruleNames.map { rule -> "${fm.entryPath}: $rule" }
-            }
-            binding.matchesText.text = matchLines.take(10).joinToString("\n").let { text ->
-                if (matchLines.size > 10) {
-                    "$text\n... (${matchLines.size} matches total)"
-                } else {
-                    text
-                }
+            val firstDetection = result.matches.firstOrNull()?.ruleNames?.firstOrNull()
+            if (firstDetection != null) {
+                binding.firstDetectionText.text = firstDetection
+                binding.firstDetectionText.visibility = android.view.View.VISIBLE
+            } else {
+                binding.firstDetectionText.visibility = android.view.View.GONE
             }
         }
     }

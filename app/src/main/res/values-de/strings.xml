@@ -41,4 +41,10 @@
     <string name="about_title">Über</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_credits">Diese App verwendet:\n\n• YARA-X von FoxRefire – Mustererkennung zur Malware-Erkennung\n• yara-forge-Regeln von YARAHQ – Community-Sammlung von YARA-Regeln\n\nYARA Anti-Malware scannt installierte Apps mit YARA-Regeln, um potenziell schädliche Anwendungen zu identifizieren.</string>
+    <string name="threat_details">Erkennungsdetails</string>
+    <string name="detections_by_file">Erkennungen nach Datei</string>
+    <string name="uninstall">Deinstallieren</string>
+    <string name="app_info">App-Info</string>
+    <string name="uninstall_open">Öffnet Deinstallationsbildschirm</string>
+    <string name="app_info_open">Öffnet App-Einstellungen</string>
 </resources>

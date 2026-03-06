@@ -2,4 +2,7 @@
 <resources>
     <color name="color_primary">#1976D2</color>
     <color name="color_primary_dark">#1565C0</color>
+    <color name="error_red">#D32F2F</color>
+    <color name="detection_badge_bg">#D32F2F</color>
+    <color name="detection_badge_text">@android:color/white</color>
 </resources>

@@ -41,4 +41,10 @@
     <string name="about_title">정보</string>
     <string name="about_version">버전 %1$s</string>
     <string name="about_credits">이 앱은 다음을 사용합니다:\n\n• YARA-X(FoxRefire) - 악성코드 탐지를 위한 패턴 매칭\n• yara-forge 규칙(YARAHQ) - 커뮤니티 YARA 규칙 모음\n\nYARA Anti-Malware는 설치된 앱을 YARA 규칙으로 스캔하여 잠재적으로 악의적인 애플리케이션을 식별합니다.</string>
+    <string name="threat_details">검출 상세</string>
+    <string name="detections_by_file">파일별 검출 목록</string>
+    <string name="uninstall">제거</string>
+    <string name="app_info">앱 정보</string>
+    <string name="uninstall_open">제거 화면 열기</string>
+    <string name="app_info_open">앱 설정 열기</string>
 </resources>

@@ -41,4 +41,10 @@
     <string name="about_title">關於</string>
     <string name="about_version">版本 %1$s</string>
     <string name="about_credits">此應用程式使用：\n\n• YARA-X（FoxRefire）－用於惡意軟體偵測的樣式比對\n• yara-forge 規則（YARAHQ）－社群 YARA 規則集\n\nYARA Anti-Malware 使用 YARA 規則掃描已安裝的應用程式，協助識別潛在惡意應用程式。</string>
+    <string name="threat_details">偵測詳細資訊</string>
+    <string name="detections_by_file">依檔案顯示偵測結果</string>
+    <string name="uninstall">解除安裝</string>
+    <string name="app_info">應用程式資訊</string>
+    <string name="uninstall_open">開啟解除安裝畫面</string>
+    <string name="app_info_open">開啟應用程式設定</string>
 </resources>

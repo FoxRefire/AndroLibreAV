@@ -67,6 +67,8 @@ class ScanForegroundService : Service() {
                         scanning = progress.scannedApps < progress.totalApps || progress.totalApps == 0,
                         scanned = progress.scannedApps,
                         total = progress.totalApps,
+                        currentPackage = progress.currentPackage,
+                        currentAppName = progress.currentAppName,
                         results = progress.results
                     )
 

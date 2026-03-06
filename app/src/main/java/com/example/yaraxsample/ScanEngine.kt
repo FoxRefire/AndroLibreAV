@@ -28,7 +28,8 @@ class ScanEngine(private val context: Context) {
     data class ScanProgress(
         val scannedApps: Int,
         val totalApps: Int,
-        val currentApp: String?,
+        val currentPackage: String?,
+        val currentAppName: String?,
         val results: List<ScanResult>
     )
 
@@ -38,7 +39,7 @@ class ScanEngine(private val context: Context) {
      */
     fun scan(rulesRepo: RulesRepository): Flow<ScanProgress> = flow {
         val rules = loadRules(rulesRepo) ?: run {
-            emit(ScanProgress(0, 0, null, emptyList()))
+            emit(ScanProgress(0, 0, null, null, emptyList()))
             return@flow
         }
 
@@ -53,8 +54,9 @@ class ScanEngine(private val context: Context) {
                 for (appInfo in apps) {
                     val pkg = appInfo.packageName
                     val appName = getAppLabel(appInfo)
-                    val apkPaths = getApkPaths(appInfo)
+                    emit(ScanProgress(scanned, total, pkg, appName, results.toList()))
 
+                    val apkPaths = getApkPaths(appInfo)
                     val fileMatches = mutableListOf<FileMatch>()
                     for (apkPath in apkPaths) {
                         try {
@@ -95,12 +97,12 @@ class ScanEngine(private val context: Context) {
                     }
 
                     scanned++
-                    emit(ScanProgress(scanned, total, appName, results.toList()))
+                    emit(ScanProgress(scanned, total, pkg, appName, results.toList()))
                 }
             }
         }
 
-        emit(ScanProgress(total, total, null, results))
+        emit(ScanProgress(total, total, null, null, results))
     }.flowOn(Dispatchers.IO)
 
     private suspend fun loadRules(rulesRepo: RulesRepository): YaraRules? = withContext(Dispatchers.IO) {

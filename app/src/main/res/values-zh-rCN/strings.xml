@@ -41,4 +41,10 @@
     <string name="about_title">关于</string>
     <string name="about_version">版本 %1$s</string>
     <string name="about_credits">此应用使用：\n\n• YARA-X（FoxRefire）－用于恶意软件检测的模式匹配\n• yara-forge 规则（YARAHQ）－社区 YARA 规则集\n\nYARA Anti-Malware 使用 YARA 规则扫描已安装应用，帮助识别潜在的恶意应用程序。</string>
+    <string name="threat_details">检测详情</string>
+    <string name="detections_by_file">按文件显示检测结果</string>
+    <string name="uninstall">卸载</string>
+    <string name="app_info">应用信息</string>
+    <string name="uninstall_open">打开卸载界面</string>
+    <string name="app_info_open">打开应用设置</string>
 </resources>

@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,8 +16,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yaraxsample.databinding.ActivityMainBinding
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -37,7 +34,12 @@ class MainActivity : AppCompatActivity() {
         rulesRepo = RulesRepository(this)
         scanEngine = ScanEngine(this)
 
-        resultsAdapter = ScanResultsAdapter()
+        setSupportActionBar(binding.toolbar)
+        resultsAdapter = ScanResultsAdapter(packageManager) { result ->
+            startActivity(Intent(this, ThreatDetailActivity::class.java).apply {
+                putExtra(ThreatDetailActivity.EXTRA_SCAN_RESULT, result)
+            })
+        }
         binding.resultsList.layoutManager = LinearLayoutManager(this)
         binding.resultsList.adapter = resultsAdapter
         binding.resultsList.itemAnimator = null
@@ -130,6 +132,24 @@ class MainActivity : AppCompatActivity() {
             binding.scanButton.isEnabled = !state.isScanning
             binding.updateRulesButton.isEnabled = !state.isScanning
             resultsAdapter.submitList(state.results)
+
+            val showScanningCard = state.isScanning && state.currentScanningPackage != null
+            binding.scanningCard.isVisible = showScanningCard
+            if (showScanningCard) {
+                try {
+                    binding.scanningAppIcon.setImageDrawable(
+                        packageManager.getApplicationIcon(state.currentScanningPackage!!)
+                    )
+                    binding.scanningAppIcon.visibility = android.view.View.VISIBLE
+                    binding.scanningIconPlaceholder.visibility = android.view.View.GONE
+                } catch (e: PackageManager.NameNotFoundException) {
+                    binding.scanningAppIcon.visibility = android.view.View.GONE
+                    binding.scanningIconPlaceholder.visibility = android.view.View.VISIBLE
+                }
+                binding.scanningAppName.text = state.currentScanningAppName ?: state.currentScanningPackage
+                binding.scanningPackageName.text = state.currentScanningPackage
+            }
+
             if (!state.isScanning) {
                 hasCompletedScan = true
                 updateEmptyViewVisibility(state.results)
@@ -199,6 +219,23 @@ class MainActivity : AppCompatActivity() {
                 }
                 binding.progressBar.progress = percent
                 resultsAdapter.submitList(state.results)
+
+                val showScanningCard = state.isScanning && state.currentScanningPackage != null
+                binding.scanningCard.isVisible = showScanningCard
+                if (showScanningCard) {
+                    try {
+                        binding.scanningAppIcon.setImageDrawable(
+                            packageManager.getApplicationIcon(state.currentScanningPackage!!)
+                        )
+                        binding.scanningAppIcon.visibility = android.view.View.VISIBLE
+                        binding.scanningIconPlaceholder.visibility = android.view.View.GONE
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        binding.scanningAppIcon.visibility = android.view.View.GONE
+                        binding.scanningIconPlaceholder.visibility = android.view.View.VISIBLE
+                    }
+                    binding.scanningAppName.text = state.currentScanningAppName ?: state.currentScanningPackage
+                    binding.scanningPackageName.text = state.currentScanningPackage
+                }
 
                 val scanComplete = state.totalApps > 0 && !state.isScanning
                 val scanFailed = state.error != null

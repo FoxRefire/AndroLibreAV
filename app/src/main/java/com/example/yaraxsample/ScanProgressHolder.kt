@@ -13,6 +13,8 @@ object ScanProgressHolder {
         val isScanning: Boolean = false,
         val scannedApps: Int = 0,
         val totalApps: Int = 0,
+        val currentScanningPackage: String? = null,
+        val currentScanningAppName: String? = null,
         val results: List<ScanResult> = emptyList(),
         val error: String? = null
     )
@@ -20,8 +22,22 @@ object ScanProgressHolder {
     private val _state = MutableStateFlow(State())
     val state: StateFlow<State> = _state.asStateFlow()
 
-    fun update(scanning: Boolean, scanned: Int, total: Int, results: List<ScanResult>) {
-        _state.value = State(isScanning = scanning, scannedApps = scanned, totalApps = total, results = results)
+    fun update(
+        scanning: Boolean,
+        scanned: Int,
+        total: Int,
+        currentPackage: String? = null,
+        currentAppName: String? = null,
+        results: List<ScanResult>
+    ) {
+        _state.value = State(
+            isScanning = scanning,
+            scannedApps = scanned,
+            totalApps = total,
+            currentScanningPackage = currentPackage,
+            currentScanningAppName = currentAppName,
+            results = results
+        )
     }
 
     fun setError(message: String) {
