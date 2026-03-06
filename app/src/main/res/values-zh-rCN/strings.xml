@@ -24,4 +24,21 @@
     <string name="permission_query_packages">完整应用扫描需要权限</string>
     <string name="scan_error">扫描错误: %1$s</string>
     <string name="rules_load_failed">无法加载规则。请先更新规则。</string>
+    <string name="settings">设置</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_language">语言</string>
+    <string name="settings_language_system">跟随系统</string>
+    <string name="settings_language_en">英语</string>
+    <string name="settings_language_ja">日语</string>
+    <string name="settings_language_zh_CN">简体中文</string>
+    <string name="settings_language_zh_TW">繁体中文</string>
+    <string name="settings_language_fr">法语</string>
+    <string name="settings_language_it">意大利语</string>
+    <string name="settings_language_ko">韩语</string>
+    <string name="settings_language_es">西班牙语</string>
+    <string name="settings_language_de">德语</string>
+    <string name="settings_about">关于此应用</string>
+    <string name="about_title">关于</string>
+    <string name="about_version">版本 %1$s</string>
+    <string name="about_credits">此应用使用：\n\n• YARA-X（FoxRefire）－用于恶意软件检测的模式匹配\n• yara-forge 规则（YARAHQ）－社区 YARA 规则集\n\nYARA Anti-Malware 使用 YARA 规则扫描已安装应用，帮助识别潜在的恶意应用程序。</string>
 </resources>

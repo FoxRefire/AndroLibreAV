@@ -24,4 +24,21 @@
     <string name="permission_query_packages">Vollständiger App-Scan erfordert Berechtigung</string>
     <string name="scan_error">Scanfehler: %1$s</string>
     <string name="rules_load_failed">Regeln konnten nicht geladen werden. Bitte zuerst aktualisieren.</string>
+    <string name="settings">Einstellungen</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_language">Sprache</string>
+    <string name="settings_language_system">Systemstandard</string>
+    <string name="settings_language_en">Englisch</string>
+    <string name="settings_language_ja">Japanisch</string>
+    <string name="settings_language_zh_CN">Vereinfachtes Chinesisch</string>
+    <string name="settings_language_zh_TW">Traditionelles Chinesisch</string>
+    <string name="settings_language_fr">Französisch</string>
+    <string name="settings_language_it">Italienisch</string>
+    <string name="settings_language_ko">Koreanisch</string>
+    <string name="settings_language_es">Spanisch</string>
+    <string name="settings_language_de">Deutsch</string>
+    <string name="settings_about">Über diese App</string>
+    <string name="about_title">Über</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_credits">Diese App verwendet:\n\n• YARA-X von FoxRefire – Mustererkennung zur Malware-Erkennung\n• yara-forge-Regeln von YARAHQ – Community-Sammlung von YARA-Regeln\n\nYARA Anti-Malware scannt installierte Apps mit YARA-Regeln, um potenziell schädliche Anwendungen zu identifizieren.</string>
 </resources>

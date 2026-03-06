@@ -2,6 +2,8 @@ package com.example.yaraxsample
 
 import android.Manifest
 import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -44,15 +46,27 @@ class MainActivity : AppCompatActivity() {
 
         binding.updateRulesButton.setOnClickListener { updateRules() }
         binding.scanButton.setOnClickListener { startScan() }
-        binding.customRulesButton.setOnClickListener {
-            startActivity(Intent(this, CustomRulesActivity::class.java))
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestQueryAllPackagesIfNeeded()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermission()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

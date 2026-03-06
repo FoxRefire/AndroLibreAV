@@ -24,4 +24,21 @@
     <string name="permission_query_packages">El escaneo completo de apps requiere permiso</string>
     <string name="scan_error">Error de escaneo: %1$s</string>
     <string name="rules_load_failed">No se pudieron cargar las reglas. Actualízalas primero.</string>
+    <string name="settings">Ajustes</string>
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_system">Predeterminado del sistema</string>
+    <string name="settings_language_en">Inglés</string>
+    <string name="settings_language_ja">Japonés</string>
+    <string name="settings_language_zh_CN">Chino simplificado</string>
+    <string name="settings_language_zh_TW">Chino tradicional</string>
+    <string name="settings_language_fr">Francés</string>
+    <string name="settings_language_it">Italiano</string>
+    <string name="settings_language_ko">Coreano</string>
+    <string name="settings_language_es">Español</string>
+    <string name="settings_language_de">Alemán</string>
+    <string name="settings_about">Acerca de esta aplicación</string>
+    <string name="about_title">Acerca de</string>
+    <string name="about_version">Versión %1$s</string>
+    <string name="about_credits">Esta aplicación utiliza:\n\n• YARA-X por FoxRefire: detección de patrones para identificación de malware\n• Reglas yara-forge por YARAHQ: colección comunitaria de reglas YARA\n\nYARA Anti-Malware escanea aplicaciones instaladas usando reglas YARA para ayudar a identificar aplicaciones potencialmente maliciosas.</string>
 </resources>

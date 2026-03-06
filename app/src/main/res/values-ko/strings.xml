@@ -24,4 +24,21 @@
     <string name="permission_query_packages">전체 앱 스캔에는 권한이 필요합니다</string>
     <string name="scan_error">스캔 오류: %1$s</string>
     <string name="rules_load_failed">규칙을 불러올 수 없습니다. 먼저 규칙을 업데이트하세요.</string>
+    <string name="settings">설정</string>
+    <string name="settings_title">설정</string>
+    <string name="settings_language">언어</string>
+    <string name="settings_language_system">시스템 기본값</string>
+    <string name="settings_language_en">영어</string>
+    <string name="settings_language_ja">일본어</string>
+    <string name="settings_language_zh_CN">간체 중국어</string>
+    <string name="settings_language_zh_TW">번체 중국어</string>
+    <string name="settings_language_fr">프랑스어</string>
+    <string name="settings_language_it">이탈리아어</string>
+    <string name="settings_language_ko">한국어</string>
+    <string name="settings_language_es">스페인어</string>
+    <string name="settings_language_de">독일어</string>
+    <string name="settings_about">이 앱 정보</string>
+    <string name="about_title">정보</string>
+    <string name="about_version">버전 %1$s</string>
+    <string name="about_credits">이 앱은 다음을 사용합니다:\n\n• YARA-X(FoxRefire) - 악성코드 탐지를 위한 패턴 매칭\n• yara-forge 규칙(YARAHQ) - 커뮤니티 YARA 규칙 모음\n\nYARA Anti-Malware는 설치된 앱을 YARA 규칙으로 스캔하여 잠재적으로 악의적인 애플리케이션을 식별합니다.</string>
 </resources>

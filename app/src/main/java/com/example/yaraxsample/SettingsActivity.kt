@@ -1,0 +1,56 @@
+package com.example.yaraxsample
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
+import com.example.yaraxsample.databinding.ActivitySettingsBinding
+
+class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySettingsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.settings_title)
+
+        val labels = LocaleHelper.languageEntries.map { getString(resources.getIdentifier(it.second, "string", packageName)) }
+        binding.languageSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        val currentLang = LocaleHelper.getLanguage()
+        val currentIndex = LocaleHelper.languageEntries.indexOfFirst { it.first == currentLang }.let {
+            if (it >= 0) it else 0
+        }
+        binding.languageSpinner.setSelection(currentIndex)
+
+        binding.languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                val tag = LocaleHelper.languageEntries[position].first
+                if (tag != LocaleHelper.getLanguage()) {
+                    LocaleHelper.setLanguage(tag)
+                    recreate()
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        binding.customRulesButton.setOnClickListener {
+            startActivity(Intent(this, CustomRulesActivity::class.java))
+        }
+
+        binding.aboutButton.setOnClickListener {
+            startActivity(Intent(this, AboutActivity::class.java))
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+}
