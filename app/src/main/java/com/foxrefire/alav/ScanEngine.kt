@@ -81,24 +81,26 @@ class ScanEngine(private val context: Context) {
                                     fileMatches.add(FileMatch(apkFile.name, rawMatches))
                                 }
                             }
-                            ZipFile(apkPath).use { zip ->
-                                for (entry in zip.entries()) {
-                                    if (entry.isDirectory) continue
-                                    if (entry.size > MAX_FILE_SIZE_BYTES) continue
-                                    if (entry.size <= 0) continue
+                            if (ScanPreferences.getScanApkEntries(context)) {
+                                ZipFile(apkPath).use { zip ->
+                                    for (entry in zip.entries()) {
+                                        if (entry.isDirectory) continue
+                                        if (entry.size > MAX_FILE_SIZE_BYTES) continue
+                                        if (entry.size <= 0) continue
 
-                                    try {
-                                        zip.getInputStream(entry).use { input ->
-                                            val data = input.readBytes()
-                                            val matches = scanner.scan(data)
-                                            if (matches.isNotEmpty()) {
-                                                fileMatches.add(
-                                                    FileMatch(entry.name, matches)
-                                                )
+                                        try {
+                                            zip.getInputStream(entry).use { input ->
+                                                val data = input.readBytes()
+                                                val matches = scanner.scan(data)
+                                                if (matches.isNotEmpty()) {
+                                                    fileMatches.add(
+                                                        FileMatch(entry.name, matches)
+                                                    )
+                                                }
                                             }
+                                        } catch (e: Exception) {
+                                            Log.w(TAG, "Failed to scan entry ${entry.name} in $pkg", e)
                                         }
-                                    } catch (e: Exception) {
-                                        Log.w(TAG, "Failed to scan entry ${entry.name} in $pkg", e)
                                     }
                                 }
                             }

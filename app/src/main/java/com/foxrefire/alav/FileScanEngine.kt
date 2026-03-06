@@ -92,26 +92,28 @@ class FileScanEngine(private val context: Context) {
                     }
                 }
             }
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                ZipInputStream(input.buffered()).use { zis ->
-                    var entry = zis.nextEntry
-                    while (entry != null) {
-                        if (!entry.isDirectory && entry.size != 0L && (entry.size < 0 || entry.size <= MAX_FILE_SIZE_BYTES)) {
-                            try {
-                                val data = zis.readBytes()
-                                val matches = scanner.scan(data)
-                                if (matches.isNotEmpty()) {
-                                    fileMatches.add(FileMatch(entry.name, matches))
+            if (ScanPreferences.getScanApkEntries(context)) {
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    ZipInputStream(input.buffered()).use { zis ->
+                        var entry = zis.nextEntry
+                        while (entry != null) {
+                            if (!entry.isDirectory && entry.size != 0L && (entry.size < 0 || entry.size <= MAX_FILE_SIZE_BYTES)) {
+                                try {
+                                    val data = zis.readBytes()
+                                    val matches = scanner.scan(data)
+                                    if (matches.isNotEmpty()) {
+                                        fileMatches.add(FileMatch(entry.name, matches))
+                                    }
+                                } catch (e: Exception) {
+                                    Log.w(TAG, "Failed to scan entry ${entry.name} in $name", e)
                                 }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Failed to scan entry ${entry.name} in $name", e)
                             }
+                            zis.closeEntry()
+                            entry = zis.nextEntry
                         }
-                        zis.closeEntry()
-                        entry = zis.nextEntry
                     }
-                }
-            } ?: Log.w(TAG, "Cannot open URI: $uri")
+                } ?: Log.w(TAG, "Cannot open URI: $uri")
+            }
         } else {
             try {
                 context.contentResolver.openInputStream(uri)?.use { input ->

@@ -54,6 +54,8 @@
     <string name="uninstall_open">Opens uninstall screen</string>
     <string name="settings_skip_system_apps">Skip system apps</string>
     <string name="settings_skip_system_apps_desc">When enabled, only user-installed apps are scanned; system apps are excluded.</string>
+    <string name="settings_scan_apk_entries">Scan APK contents (extract and scan each file)</string>
+    <string name="settings_scan_apk_entries_desc">When on, the APK is also opened as a ZIP and each file inside is scanned. When off, only the APK file as a whole is matched.</string>
     <string name="settings_apk_scan_max_size">Max APK file scan size</string>
     <string name="settings_apk_scan_max_size_desc">Maximum size of the APK file (before extraction) to scan as a whole. Larger APKs are scanned up to this limit from the start.</string>
     <string name="settings_apk_scan_20mb">20 MB</string>

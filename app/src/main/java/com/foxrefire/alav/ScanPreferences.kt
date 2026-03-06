@@ -11,6 +11,7 @@ object ScanPreferences {
     private const val PREFS_NAME = "app_prefs"
     private const val KEY_SKIP_SYSTEM_APPS = "skip_system_apps"
     private const val KEY_MAX_APK_SCAN_SIZE_MB = "max_apk_scan_size_mb"
+    private const val KEY_SCAN_APK_ENTRIES = "scan_apk_entries"
 
     /** Default max size (MB) for scanning the APK file itself before extraction. */
     const val DEFAULT_MAX_APK_SCAN_SIZE_MB = 80
@@ -47,4 +48,12 @@ object ScanPreferences {
 
     fun getMaxApkScanSizeBytes(context: Context): Long =
         getMaxApkScanSizeMb(context).toLong() * 1024L * 1024L
+
+    /** When true, APK is also scanned by extracting and matching each file inside. Default on. */
+    fun getScanApkEntries(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_SCAN_APK_ENTRIES, true)
+
+    fun setScanApkEntries(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_SCAN_APK_ENTRIES, value).apply()
+    }
 }

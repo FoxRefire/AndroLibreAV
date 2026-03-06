@@ -45,6 +45,11 @@ class SettingsActivity : AppCompatActivity() {
             ScanPreferences.setSkipSystemApps(this, isChecked)
         }
 
+        binding.scanApkEntriesSwitch.isChecked = ScanPreferences.getScanApkEntries(this)
+        binding.scanApkEntriesSwitch.setOnCheckedChangeListener { _, isChecked ->
+            ScanPreferences.setScanApkEntries(this, isChecked)
+        }
+
         // Max APK scan size (before extraction)
         binding.apkScanMaxSizeSpinner.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item,
