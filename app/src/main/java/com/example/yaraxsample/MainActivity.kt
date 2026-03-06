@@ -1,5 +1,6 @@
 package com.example.yaraxsample
 
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yaraxsample.databinding.ActivityMainBinding
 import kotlinx.coroutines.flow.catch
@@ -48,6 +51,17 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestQueryAllPackagesIfNeeded()
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermission()
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_NOTIFICATIONS)
+        }
     }
 
     private fun requestQueryAllPackagesIfNeeded() {
@@ -67,10 +81,11 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_QUERY_PACKAGES && grantResults.isNotEmpty()) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+        when (requestCode) {
+            REQUEST_QUERY_PACKAGES -> if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "全アプリのスキャンには権限が必要です", Toast.LENGTH_LONG).show()
             }
+            REQUEST_NOTIFICATIONS -> { /* Optional: notify user about notification permission */ }
         }
     }
 
@@ -85,6 +100,31 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateStatusFromRules()
+        syncUiFromScanState(ScanProgressHolder.state.value)
+    }
+
+    private fun syncUiFromScanState(state: ScanProgressHolder.State) {
+        if (state.totalApps > 0) {
+            val percent = (state.scannedApps * 100) / state.totalApps
+            binding.statusText.text = if (state.isScanning) {
+                getString(R.string.scanning, state.scannedApps, state.totalApps, percent)
+            } else {
+                getString(R.string.status_ready)
+            }
+            binding.progressBar.progress = percent
+            binding.progressBar.isVisible = state.isScanning
+            binding.scanButton.isEnabled = !state.isScanning
+            binding.updateRulesButton.isEnabled = !state.isScanning
+            resultsAdapter.submitList(state.results)
+            if (!state.isScanning) {
+                hasCompletedScan = true
+                updateEmptyViewVisibility(state.results)
+            }
+        } else if (state.error != null) {
+            binding.scanButton.isEnabled = true
+            binding.updateRulesButton.isEnabled = true
+            binding.progressBar.isVisible = false
+        }
     }
 
     private fun updateRules() {
@@ -116,6 +156,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        ScanProgressHolder.clear()
         binding.scanButton.isEnabled = false
         binding.updateRulesButton.isEnabled = false
         binding.progressBar.isVisible = true
@@ -123,52 +164,52 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.progress = 0
         resultsAdapter.submitList(emptyList())
 
+        val intent = Intent(this, ScanForegroundService::class.java).apply {
+            action = ScanForegroundService.ACTION_START_SCAN
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+
         lifecycleScope.launch {
-            scanEngine.scan(rulesRepo)
-                .catch { e ->
-                    binding.statusText.text = "エラー: ${e.message}"
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                ScanProgressHolder.state.collect { state ->
+                val percent = if (state.totalApps > 0) (state.scannedApps * 100) / state.totalApps else 0
+                binding.statusText.text = when {
+                    state.error != null -> state.error ?: ""
+                    state.totalApps > 0 -> getString(R.string.scanning, state.scannedApps, state.totalApps, percent)
+                    state.isScanning -> getString(R.string.scanning_preparing)
+                    else -> getString(R.string.status_ready)
+                }
+                binding.progressBar.progress = percent
+                resultsAdapter.submitList(state.results)
+
+                val scanComplete = state.totalApps > 0 && !state.isScanning
+                val scanFailed = state.error != null
+                if (scanComplete || scanFailed) {
+                    hasCompletedScan = scanComplete
                     binding.scanButton.isEnabled = true
                     binding.updateRulesButton.isEnabled = true
                     binding.progressBar.isVisible = false
-                    Toast.makeText(this@MainActivity, "スキャンエラー: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-                .collectLatest { progress ->
-                    binding.statusText.text = when {
-                        progress.totalApps > 0 -> getString(R.string.scanning, progress.scannedApps, progress.totalApps)
-                        progress.totalApps == 0 && progress.results.isEmpty() -> {
-                            Toast.makeText(this@MainActivity, "ルールを読み込めませんでした。先にルールを更新してください。", Toast.LENGTH_LONG).show()
-                            getString(R.string.rules_update_failed)
+                    updateEmptyViewVisibility(state.results)
+                    if (scanComplete) {
+                        if (state.results.isEmpty()) {
+                            Toast.makeText(this@MainActivity, R.string.no_threats, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                getString(R.string.scan_complete_matches, state.results.size),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        else -> getString(R.string.status_ready)
-                    }
-                    binding.progressBar.progress = if (progress.totalApps > 0) {
-                        (progress.scannedApps * 100) / progress.totalApps
-                    } else {
-                        0
-                    }
-                    resultsAdapter.submitList(progress.results)
-
-                    val scanComplete = progress.scannedApps >= progress.totalApps && progress.totalApps > 0
-                    val rulesFailed = progress.totalApps == 0
-                    if (scanComplete || rulesFailed) {
-                        if (scanComplete) hasCompletedScan = true
-                        binding.scanButton.isEnabled = true
-                        binding.updateRulesButton.isEnabled = true
-                        binding.progressBar.isVisible = false
-                        updateEmptyViewVisibility(progress.results)
-                        if (scanComplete) {
-                            if (progress.results.isEmpty()) {
-                                Toast.makeText(this@MainActivity, R.string.no_threats, Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(
-                                    this@MainActivity,
-                                    "${progress.results.size}件のマッチを検出",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
+                    } else if (scanFailed) {
+                        Toast.makeText(this@MainActivity, "スキャンエラー: ${state.error}", Toast.LENGTH_LONG).show()
                     }
                 }
+                }
+            }
         }
     }
 
@@ -179,5 +220,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUEST_QUERY_PACKAGES = 1001
+        private const val REQUEST_NOTIFICATIONS = 1002
     }
 }
