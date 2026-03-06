@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YARA 악성코드 방지</string>
+    <string name="update_rules">규칙 업데이트</string>
+    <string name="start_scan">스캔 시작</string>
+    <string name="status_ready">규칙을 먼저 업데이트한 후 스캔을 시작하세요</string>
+    <string name="status_ready_short">스캔 시작</string>
+    <string name="scan_results">스캔 결과</string>
+    <string name="no_threats">위협이 발견되지 않았습니다</string>
+    <string name="rules_updated">규칙이 업데이트되었습니다</string>
+    <string name="rules_update_failed">규칙 업데이트에 실패했습니다</string>
+    <string name="downloading_rules">규칙 다운로드 중…</string>
+    <string name="scanning">스캔 중: %1$d / %2$d (%3$d%%)</string>
+    <string name="custom_rules">사용자 지정 규칙</string>
+    <string name="custom_rules_title">사용자 지정 YARA 규칙</string>
+    <string name="custom_rules_hint">YARA 규칙 입력 (여러 규칙 가능)</string>
+    <string name="save_custom_rules">저장</string>
+    <string name="custom_rules_saved">사용자 지정 규칙이 저장되었습니다</string>
+    <string name="scanning_preparing">스캔 준비 중…</string>
+    <string name="notification_scan_title">YARA 스캔 중</string>
+    <string name="notification_channel_name">스캔 알림</string>
+    <string name="notification_channel_desc">스캔 진행 상황을 표시합니다</string>
+    <string name="scan_complete_matches">%d개 일치 감지됨</string>
+    <string name="permission_query_packages">전체 앱 스캔에는 권한이 필요합니다</string>
+    <string name="scan_error">스캔 오류: %1$s</string>
+    <string name="rules_load_failed">규칙을 불러올 수 없습니다. 먼저 규칙을 업데이트하세요.</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YARA Anti-Malware</string>
+    <string name="update_rules">Regeln aktualisieren</string>
+    <string name="start_scan">Scan starten</string>
+    <string name="status_ready">Aktualisiere zuerst die Regeln und starte dann den Scan</string>
+    <string name="status_ready_short">Scan starten</string>
+    <string name="scan_results">Scanergebnisse</string>
+    <string name="no_threats">Keine Bedrohungen erkannt</string>
+    <string name="rules_updated">Regeln aktualisiert</string>
+    <string name="rules_update_failed">Regeln konnten nicht aktualisiert werden</string>
+    <string name="downloading_rules">Regeln werden heruntergeladen…</string>
+    <string name="scanning">Scanne: %1$d / %2$d (%3$d%%)</string>
+    <string name="custom_rules">Benutzerdefinierte Regeln</string>
+    <string name="custom_rules_title">Benutzerdefinierte YARA-Regeln</string>
+    <string name="custom_rules_hint">YARA-Regeln eingeben (mehrere Regeln möglich)</string>
+    <string name="save_custom_rules">Speichern</string>
+    <string name="custom_rules_saved">Benutzerdefinierte Regeln gespeichert</string>
+    <string name="scanning_preparing">Scan wird vorbereitet…</string>
+    <string name="notification_scan_title">YARA-Scan läuft</string>
+    <string name="notification_channel_name">Scan-Benachrichtigung</string>
+    <string name="notification_channel_desc">Zeigt den Scan-Fortschritt an</string>
+    <string name="scan_complete_matches">%d Übereinstimmung(en) erkannt</string>
+    <string name="permission_query_packages">Vollständiger App-Scan erfordert Berechtigung</string>
+    <string name="scan_error">Scanfehler: %1$s</string>
+    <string name="rules_load_failed">Regeln konnten nicht geladen werden. Bitte zuerst aktualisieren.</string>
+</resources>

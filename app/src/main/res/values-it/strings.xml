@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YARA Anti-Malware</string>
+    <string name="update_rules">Aggiorna regole</string>
+    <string name="start_scan">Avvia scansione</string>
+    <string name="status_ready">Aggiorna prima le regole, poi avvia la scansione</string>
+    <string name="status_ready_short">Avvia scansione</string>
+    <string name="scan_results">Risultati scansione</string>
+    <string name="no_threats">Nessuna minaccia rilevata</string>
+    <string name="rules_updated">Regole aggiornate</string>
+    <string name="rules_update_failed">Aggiornamento regole fallito</string>
+    <string name="downloading_rules">Download regole in corso…</string>
+    <string name="scanning">Scansione: %1$d / %2$d (%3$d%%)</string>
+    <string name="custom_rules">Regole personalizzate</string>
+    <string name="custom_rules_title">Regole YARA personalizzate</string>
+    <string name="custom_rules_hint">Inserisci le regole YARA (più regole consentite)</string>
+    <string name="save_custom_rules">Salva</string>
+    <string name="custom_rules_saved">Regole personalizzate salvate</string>
+    <string name="scanning_preparing">Preparazione scansione…</string>
+    <string name="notification_scan_title">Scansione YARA in corso</string>
+    <string name="notification_channel_name">Notifica scansione</string>
+    <string name="notification_channel_desc">Mostra lo stato di avanzamento della scansione</string>
+    <string name="scan_complete_matches">%d corrispondenza/e rilevata/e</string>
+    <string name="permission_query_packages">La scansione completa delle app richiede autorizzazione</string>
+    <string name="scan_error">Errore di scansione: %1$s</string>
+    <string name="rules_load_failed">Impossibile caricare le regole. Aggiornale prima.</string>
+</resources>

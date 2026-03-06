@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">YARA Anti-Malware</string>
-    <string name="update_rules">ルールを更新</string>
-    <string name="start_scan">スキャン開始</string>
-    <string name="status_ready">ルールを更新してからスキャンを開始してください</string>
-    <string name="scan_results">スキャン結果</string>
-    <string name="no_threats">脅威は検出されませんでした</string>
-    <string name="rules_updated">ルールを更新しました</string>
-    <string name="rules_update_failed">ルールの更新に失敗しました</string>
-    <string name="downloading_rules">ルールをダウンロード中…</string>
-    <string name="scanning">スキャン中: %1$d / %2$d (%3$d%%)</string>
-    <string name="custom_rules">カスタムルール</string>
-    <string name="custom_rules_title">カスタムYARAルール</string>
-    <string name="custom_rules_hint">YARAルールを入力（複数ルール可）</string>
-    <string name="save_custom_rules">保存</string>
-    <string name="custom_rules_saved">カスタムルールを保存しました</string>
-    <string name="scanning_preparing">スキャン準備中…</string>
-    <string name="notification_scan_title">YARAスキャン中</string>
-    <string name="notification_channel_name">スキャン通知</string>
-    <string name="notification_channel_desc">スキャンの進行状況を表示します</string>
-    <string name="scan_complete_matches">%d件のマッチを検出</string>
+    <string name="update_rules">Update rules</string>
+    <string name="start_scan">Start scan</string>
+    <string name="status_ready">Update rules first, then start the scan</string>
+    <string name="status_ready_short">Start scan</string>
+    <string name="scan_results">Scan results</string>
+    <string name="no_threats">No threats detected</string>
+    <string name="rules_updated">Rules updated</string>
+    <string name="rules_update_failed">Failed to update rules</string>
+    <string name="downloading_rules">Downloading rules…</string>
+    <string name="scanning">Scanning: %1$d / %2$d (%3$d%%)</string>
+    <string name="custom_rules">Custom rules</string>
+    <string name="custom_rules_title">Custom YARA rules</string>
+    <string name="custom_rules_hint">Enter YARA rules (multiple rules allowed)</string>
+    <string name="save_custom_rules">Save</string>
+    <string name="custom_rules_saved">Custom rules saved</string>
+    <string name="scanning_preparing">Preparing scan…</string>
+    <string name="notification_scan_title">YARA scanning</string>
+    <string name="notification_channel_name">Scan notification</string>
+    <string name="notification_channel_desc">Shows scan progress</string>
+    <string name="scan_complete_matches">%d match(es) detected</string>
+    <string name="permission_query_packages">Full app scan requires permission</string>
+    <string name="scan_error">Scan error: %1$s</string>
+    <string name="rules_load_failed">Failed to load rules. Please update rules first.</string>
 </resources>

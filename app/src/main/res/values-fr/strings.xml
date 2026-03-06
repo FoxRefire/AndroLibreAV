@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YARA Anti-Malware</string>
+    <string name="update_rules">Mettre à jour les règles</string>
+    <string name="start_scan">Démarrer l\'analyse</string>
+    <string name="status_ready">Mettez à jour les règles puis démarrez l\'analyse</string>
+    <string name="status_ready_short">Démarrer l\'analyse</string>
+    <string name="scan_results">Résultats de l\'analyse</string>
+    <string name="no_threats">Aucune menace détectée</string>
+    <string name="rules_updated">Règles mises à jour</string>
+    <string name="rules_update_failed">Échec de la mise à jour des règles</string>
+    <string name="downloading_rules">Téléchargement des règles…</string>
+    <string name="scanning">Analyse en cours : %1$d / %2$d (%3$d%%)</string>
+    <string name="custom_rules">Règles personnalisées</string>
+    <string name="custom_rules_title">Règles YARA personnalisées</string>
+    <string name="custom_rules_hint">Entrez les règles YARA (plusieurs règles possibles)</string>
+    <string name="save_custom_rules">Enregistrer</string>
+    <string name="custom_rules_saved">Règles personnalisées enregistrées</string>
+    <string name="scanning_preparing">Préparation de l\'analyse…</string>
+    <string name="notification_scan_title">Analyse YARA en cours</string>
+    <string name="notification_channel_name">Notification d\'analyse</string>
+    <string name="notification_channel_desc">Affiche la progression de l\'analyse</string>
+    <string name="scan_complete_matches">%d correspondance(s) détectée(s)</string>
+    <string name="permission_query_packages">L\'analyse complète des applications nécessite une autorisation</string>
+    <string name="scan_error">Erreur d\'analyse : %1$s</string>
+    <string name="rules_load_failed">Impossible de charger les règles. Veuillez d\'abord les mettre à jour.</string>
+</resources>

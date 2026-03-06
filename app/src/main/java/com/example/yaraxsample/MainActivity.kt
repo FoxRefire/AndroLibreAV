@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_QUERY_PACKAGES -> if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "全アプリのスキャンには権限が必要です", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.permission_query_packages), Toast.LENGTH_LONG).show()
             }
             REQUEST_NOTIFICATIONS -> { /* Optional: notify user about notification permission */ }
         }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateStatusFromRules() {
         binding.statusText.text = if (rulesRepo.hasAnyRules()) {
-            getString(R.string.status_ready).replace("ルールを更新してから", "スキャンを")
+            getString(R.string.status_ready_short)
         } else {
             getString(R.string.status_ready)
         }
@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                         }
                     } else if (scanFailed) {
-                        Toast.makeText(this@MainActivity, "スキャンエラー: ${state.error}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, getString(R.string.scan_error, state.error), Toast.LENGTH_LONG).show()
                     }
                 }
                 }
