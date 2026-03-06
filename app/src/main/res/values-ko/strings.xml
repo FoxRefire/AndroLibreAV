@@ -58,4 +58,6 @@
     <string name="settings_interval_daily">매일</string>
     <string name="settings_interval_3days">3일마다</string>
     <string name="settings_interval_weekly">매주</string>
+    <string name="scan_file">파일 스캔</string>
+    <string name="scan_file_invalid_share">스캔할 파일이 없습니다</string>
 </resources>

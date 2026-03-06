@@ -58,4 +58,6 @@
     <string name="settings_interval_daily">Giornaliero</string>
     <string name="settings_interval_3days">Ogni 3 giorni</string>
     <string name="settings_interval_weekly">Settimanale</string>
+    <string name="scan_file">Scansiona file</string>
+    <string name="scan_file_invalid_share">Nessun file ricevuto da scansionare</string>
 </resources>

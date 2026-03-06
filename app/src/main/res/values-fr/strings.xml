@@ -58,4 +58,6 @@
     <string name="settings_interval_daily">Quotidien</string>
     <string name="settings_interval_3days">Tous les 3 jours</string>
     <string name="settings_interval_weekly">Hebdomadaire</string>
+    <string name="scan_file">Analyser un fichier</string>
+    <string name="scan_file_invalid_share">Aucun fichier reçu à analyser</string>
 </resources>

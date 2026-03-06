@@ -42,7 +42,12 @@ class ScanResultsAdapter(
             }
 
             binding.appNameText.text = result.appName
-            binding.packageText.text = result.packageName
+            val displayPackage = if (result.packageName.startsWith("content://") || result.packageName.startsWith("file://")) {
+                result.appName
+            } else {
+                result.packageName
+            }
+            binding.packageText.text = displayPackage
 
             val firstDetection = result.matches.firstOrNull()?.ruleNames?.firstOrNull()
             if (firstDetection != null) {

@@ -58,4 +58,6 @@
     <string name="settings_interval_daily">每天</string>
     <string name="settings_interval_3days">每 3 天</string>
     <string name="settings_interval_weekly">每周</string>
+    <string name="scan_file">扫描文件</string>
+    <string name="scan_file_invalid_share">未收到要扫描的文件</string>
 </resources>

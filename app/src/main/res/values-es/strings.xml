@@ -58,4 +58,6 @@
     <string name="settings_interval_daily">Diario</string>
     <string name="settings_interval_3days">Cada 3 días</string>
     <string name="settings_interval_weekly">Semanal</string>
+    <string name="scan_file">Escanear archivo</string>
+    <string name="scan_file_invalid_share">No se recibió ningún archivo para escanear</string>
 </resources>

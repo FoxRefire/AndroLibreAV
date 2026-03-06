@@ -58,5 +58,7 @@
     <string name="settings_interval_3days">Every 3 days</string>
     <string name="settings_interval_weekly">Weekly</string>
     <string name="app_info_open">Opens app settings</string>
+    <string name="scan_file">Scan file</string>
+    <string name="scan_file_invalid_share">No file received to scan</string>
 </resources>
 

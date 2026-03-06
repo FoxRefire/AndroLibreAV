@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import androidx.core.view.isVisible
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -52,7 +53,11 @@ class ThreatDetailActivity : AppCompatActivity() {
         }
 
         binding.appNameText.text = appName
-        binding.packageText.text = pkg
+        binding.packageText.text = if (pkg.startsWith("content://") || pkg.startsWith("file://")) appName else pkg
+
+        val isFileScan = pkg.startsWith("content://") || pkg.startsWith("file://")
+        binding.uninstallButton.isVisible = !isFileScan
+        binding.appInfoButton.isVisible = !isFileScan
 
         val adapter = DetectionDetailAdapter()
         binding.detectionsList.layoutManager = LinearLayoutManager(this)

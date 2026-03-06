@@ -58,4 +58,6 @@
     <string name="settings_interval_daily">毎日</string>
     <string name="settings_interval_3days">3日ごと</string>
     <string name="settings_interval_weekly">毎週</string>
+    <string name="scan_file">ファイルをスキャン</string>
+    <string name="scan_file_invalid_share">スキャンするファイルがありません</string>
 </resources>
