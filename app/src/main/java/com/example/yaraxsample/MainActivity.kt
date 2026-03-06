@@ -219,6 +219,7 @@ class MainActivity : AppCompatActivity() {
                     state.error != null -> state.error ?: ""
                     state.totalApps > 0 -> getString(R.string.scanning, state.scannedApps, state.totalApps, percent)
                     state.isScanning -> getString(R.string.scanning_preparing)
+                    state.scannedApps == 0 && state.totalApps == 0 -> getString(R.string.scanning_preparing)
                     else -> getString(R.string.status_ready)
                 }
                 binding.progressBar.progress = percent
