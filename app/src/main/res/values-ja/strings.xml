@@ -55,6 +55,13 @@
     <string name="app_info_open">アプリ設定を開く</string>
     <string name="settings_skip_system_apps">システムアプリをスキャンしない</string>
     <string name="settings_skip_system_apps_desc">有効にするとユーザーがインストールしたアプリのみスキャンし、システムアプリは除外されます。</string>
+    <string name="settings_apk_scan_max_size">APKファイルの最大スキャンサイズ</string>
+    <string name="settings_apk_scan_max_size_desc">展開前にAPK全体としてスキャンする最大サイズ。これを超えるAPKは先頭からこのサイズまでスキャンします。</string>
+    <string name="settings_apk_scan_20mb">20 MB</string>
+    <string name="settings_apk_scan_40mb">40 MB</string>
+    <string name="settings_apk_scan_80mb">80 MB</string>
+    <string name="settings_apk_scan_120mb">120 MB</string>
+    <string name="settings_apk_scan_200mb">200 MB</string>
     <string name="settings_periodic_scan">定期スキャン</string>
     <string name="settings_periodic_scan_desc">選択した間隔で自動的にスキャンを実行します。</string>
     <string name="settings_scan_interval">スキャン間隔</string>

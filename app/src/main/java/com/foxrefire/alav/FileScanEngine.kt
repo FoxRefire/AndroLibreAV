@@ -74,6 +74,24 @@ class FileScanEngine(private val context: Context) {
         val isApk = name.lowercase().endsWith(".apk") || isZipLike(context, uri)
 
         if (isApk) {
+            // Scan the APK file itself (before extraction)
+            val maxApkBytes = ScanPreferences.getMaxApkScanSizeBytes(context).toInt().coerceAtLeast(1)
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                val buffer = ByteArray(maxApkBytes)
+                var total = 0
+                while (total < maxApkBytes) {
+                    val n = input.read(buffer, total, maxApkBytes - total)
+                    if (n <= 0) break
+                    total += n
+                }
+                val apkHead = buffer.copyOf(total)
+                if (apkHead.isNotEmpty()) {
+                    val rawMatches = scanner.scan(apkHead)
+                    if (rawMatches.isNotEmpty()) {
+                        fileMatches.add(FileMatch(name, rawMatches))
+                    }
+                }
+            }
             context.contentResolver.openInputStream(uri)?.use { input ->
                 ZipInputStream(input.buffered()).use { zis ->
                     var entry = zis.nextEntry

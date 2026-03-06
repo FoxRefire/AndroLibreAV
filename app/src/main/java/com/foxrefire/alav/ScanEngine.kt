@@ -59,8 +59,28 @@ class ScanEngine(private val context: Context) {
 
                     val apkPaths = getApkPaths(appInfo)
                     val fileMatches = mutableListOf<FileMatch>()
+                    val maxApkBytes = ScanPreferences.getMaxApkScanSizeBytes(context)
                     for (apkPath in apkPaths) {
                         try {
+                            // Scan the APK file itself (before extraction)
+                            val apkFile = File(apkPath)
+                            val toRead = minOf(apkFile.length(), maxApkBytes).toInt()
+                            val apkBytes = apkFile.inputStream().use { input ->
+                                val buffer = ByteArray(toRead)
+                                var bytesRead = 0
+                                while (bytesRead < toRead) {
+                                    val n = input.read(buffer, bytesRead, toRead - bytesRead)
+                                    if (n <= 0) break
+                                    bytesRead += n
+                                }
+                                buffer.copyOf(bytesRead)
+                            }
+                            if (apkBytes.isNotEmpty()) {
+                                val rawMatches = scanner.scan(apkBytes)
+                                if (rawMatches.isNotEmpty()) {
+                                    fileMatches.add(FileMatch(apkFile.name, rawMatches))
+                                }
+                            }
                             ZipFile(apkPath).use { zip ->
                                 for (entry in zip.entries()) {
                                     if (entry.isDirectory) continue

@@ -45,6 +45,21 @@ class SettingsActivity : AppCompatActivity() {
             ScanPreferences.setSkipSystemApps(this, isChecked)
         }
 
+        // Max APK scan size (before extraction)
+        binding.apkScanMaxSizeSpinner.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item,
+            ScanPreferences.maxApkScanSizeEntries.map { getString(resources.getIdentifier(it.second, "string", packageName)) }
+        ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        binding.apkScanMaxSizeSpinner.setSelection(
+            ScanPreferences.maxApkScanSizeEntries.indexOfFirst { it.first == ScanPreferences.getMaxApkScanSizeMb(this) }.coerceAtLeast(0)
+        )
+        binding.apkScanMaxSizeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, pos: Int, id: Long) {
+                ScanPreferences.setMaxApkScanSizeMb(this@SettingsActivity, ScanPreferences.maxApkScanSizeEntries[pos].first)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
         // Periodic scan
         binding.periodicScanSwitch.isChecked = SchedulePreferences.getPeriodicScanEnabled(this)
         binding.scanIntervalSpinner.adapter = ArrayAdapter(
