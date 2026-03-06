@@ -1,0 +1,3 @@
+[submodule "yara-x"]
+	path = yara-x
+	url = https://github.com/FoxRefire/yara-x.git
