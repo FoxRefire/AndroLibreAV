@@ -1,0 +1,10 @@
+# Copy to ~/.gradle/gradle.properties if your system JDK lacks jlink.
+# Android Gradle Plugin requires jlink for JDK image generation.
+#
+# Example (Bubblewrap / Flatpak):
+# org.gradle.java.home=/home/user/.bubblewrap/jdk/jdk-17.0.11+9
+#
+# Example (Temurin installed locally):
+# org.gradle.java.home=/usr/lib/jvm/temurin-17-jdk-amd64
+
+org.gradle.java.home=/path/to/your/jdk-17

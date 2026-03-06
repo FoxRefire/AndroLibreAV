@@ -30,7 +30,8 @@
             android:name=".FileScanActivity"
             android:exported="true"
             android:title="@string/scan_file"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            tools:ignore="ManifestResource">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -45,20 +46,24 @@
         <activity
             android:name=".CustomRulesActivity"
             android:exported="false"
-            android:title="@string/custom_rules_title" />
+            android:title="@string/custom_rules_title"
+            tools:ignore="ManifestResource" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
-            android:title="@string/settings_title" />
+            android:title="@string/settings_title"
+            tools:ignore="ManifestResource" />
         <activity
             android:name=".AboutActivity"
             android:exported="false"
-            android:title="@string/about_title" />
+            android:title="@string/about_title"
+            tools:ignore="ManifestResource" />
         <activity
             android:name=".ThreatDetailActivity"
             android:exported="false"
             android:title="@string/threat_details"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            tools:ignore="ManifestResource" />
     </application>
 
 </manifest>

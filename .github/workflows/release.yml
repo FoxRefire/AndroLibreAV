@@ -19,6 +19,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -43,12 +45,33 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Configure Gradle for CI (reduce OOM risk)
+        run: |
+          echo "org.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError" >> gradle.properties
+          echo "org.gradle.workers.max=1" >> gradle.properties
+
       - name: Build Release APK
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Set build-tools version for signing
+        id: buildtools
+        run: |
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          BT_DIR="$SDK_ROOT/build-tools"
+          if [[ -d "$BT_DIR" ]]; then
+            VERSION=$(ls "$BT_DIR" | sort -V | tail -1)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "BUILD_TOOLS_VERSION=$VERSION" >> $GITHUB_ENV
+          else
+            echo "version=34.0.0" >> $GITHUB_OUTPUT
+            echo "BUILD_TOOLS_VERSION=34.0.0" >> $GITHUB_ENV
+          fi
 
       - name: Sign APK
         id: sign
         uses: r0adkll/sign-android-release@v1
+        env:
+          BUILD_TOOLS_VERSION: ${{ steps.buildtools.outputs.version }}
         with:
           releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -74,7 +97,7 @@ jobs:
           files: ${{ steps.sign.outputs.signedReleaseFile }}
           name: Release ${{ steps.tag.outputs.tag }}
           draft: false
-          generate_release_notes: true
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -39,7 +39,7 @@ Download the latest signed APK from [Releases](https://github.com/FoxRefire/andr
 ### Prerequisites
 
 - [Android Studio](https://developer.android.com/studio) (or Android SDK + NDK)
-- JDK 17
+- JDK 17 with `jlink` (e.g. Temurin, Adoptium)
 
 ### Steps
 
@@ -47,6 +47,9 @@ Download the latest signed APK from [Releases](https://github.com/FoxRefire/andr
 # Clone with submodules (yara-x is required for native libs)
 git clone --recurse-submodules https://github.com/FoxRefire/android-antimalware-app.git
 cd android-antimalware-app
+
+# If your system JDK lacks jlink (e.g. JRE-only OpenJDK), set Java home:
+# echo "org.gradle.java.home=/path/to/jdk17" >> ~/.gradle/gradle.properties
 
 # Build debug APK
 ./gradlew assembleDebug
