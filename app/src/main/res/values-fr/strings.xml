@@ -49,4 +49,13 @@
     <string name="app_info_open">Ouvre les paramètres de l\'app</string>
     <string name="settings_skip_system_apps">Ignorer les applications système</string>
     <string name="settings_skip_system_apps_desc">Si activé, seules les applications installées par l\'utilisateur sont analysées ; les applications système sont exclues.</string>
+    <string name="settings_periodic_scan">Analyse périodique</string>
+    <string name="settings_periodic_scan_desc">Lance automatiquement une analyse à l\'intervalle sélectionné.</string>
+    <string name="settings_scan_interval">Intervalle d\'analyse</string>
+    <string name="settings_auto_rules_update">Mise à jour automatique des règles</string>
+    <string name="settings_auto_rules_update_desc">Télécharge et met à jour automatiquement les règles yara-forge en arrière-plan.</string>
+    <string name="settings_rules_update_interval">Intervalle de mise à jour</string>
+    <string name="settings_interval_daily">Quotidien</string>
+    <string name="settings_interval_3days">Tous les 3 jours</string>
+    <string name="settings_interval_weekly">Hebdomadaire</string>
 </resources>

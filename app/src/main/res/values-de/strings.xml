@@ -49,4 +49,13 @@
     <string name="app_info_open">Öffnet App-Einstellungen</string>
     <string name="settings_skip_system_apps">System-Apps überspringen</string>
     <string name="settings_skip_system_apps_desc">Wenn aktiviert, werden nur vom Benutzer installierte Apps gescannt; System-Apps werden ausgeschlossen.</string>
+    <string name="settings_periodic_scan">Periodische Überprüfung</string>
+    <string name="settings_periodic_scan_desc">Führt automatisch eine Überprüfung in dem gewählten Intervall durch.</string>
+    <string name="settings_scan_interval">Überprüfungsintervall</string>
+    <string name="settings_auto_rules_update">Automatische Regeln-Aktualisierung</string>
+    <string name="settings_auto_rules_update_desc">Lädt yara-forge-Regeln im Hintergrund automatisch herunter und aktualisiert sie.</string>
+    <string name="settings_rules_update_interval">Aktualisierungsintervall</string>
+    <string name="settings_interval_daily">Täglich</string>
+    <string name="settings_interval_3days">Alle 3 Tage</string>
+    <string name="settings_interval_weekly">Wöchentlich</string>
 </resources>

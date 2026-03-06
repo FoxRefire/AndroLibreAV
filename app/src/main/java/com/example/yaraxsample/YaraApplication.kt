@@ -8,5 +8,6 @@ class YaraApplication : Application() {
         super.onCreate()
         LocaleHelper.init(this)
         LocaleHelper.applyStoredLocale()
+        ScheduleManager.applySchedule(this)
     }
 }

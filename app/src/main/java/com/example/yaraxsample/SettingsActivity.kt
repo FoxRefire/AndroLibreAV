@@ -45,6 +45,52 @@ class SettingsActivity : AppCompatActivity() {
             ScanPreferences.setSkipSystemApps(this, isChecked)
         }
 
+        // Periodic scan
+        binding.periodicScanSwitch.isChecked = SchedulePreferences.getPeriodicScanEnabled(this)
+        binding.scanIntervalSpinner.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item,
+            SchedulePreferences.scanIntervalEntries.map { getString(resources.getIdentifier(it.second, "string", packageName)) }
+        ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        binding.scanIntervalSpinner.setSelection(
+            SchedulePreferences.scanIntervalEntries.indexOfFirst { it.first == SchedulePreferences.getPeriodicScanInterval(this) }.coerceAtLeast(0)
+        )
+        binding.scanIntervalSpinner.isEnabled = binding.periodicScanSwitch.isChecked
+        binding.periodicScanSwitch.setOnCheckedChangeListener { _, isChecked ->
+            SchedulePreferences.setPeriodicScanEnabled(this, isChecked)
+            binding.scanIntervalSpinner.isEnabled = isChecked
+            ScheduleManager.applySchedule(this)
+        }
+        binding.scanIntervalSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, pos: Int, id: Long) {
+                SchedulePreferences.setPeriodicScanInterval(this@SettingsActivity, SchedulePreferences.scanIntervalEntries[pos].first)
+                ScheduleManager.applySchedule(this@SettingsActivity)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        // Auto rules update
+        binding.autoRulesUpdateSwitch.isChecked = SchedulePreferences.getAutoRulesUpdateEnabled(this)
+        binding.rulesUpdateIntervalSpinner.adapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item,
+            SchedulePreferences.rulesIntervalEntries.map { getString(resources.getIdentifier(it.second, "string", packageName)) }
+        ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        binding.rulesUpdateIntervalSpinner.setSelection(
+            SchedulePreferences.rulesIntervalEntries.indexOfFirst { it.first == SchedulePreferences.getAutoRulesUpdateInterval(this) }.coerceAtLeast(0)
+        )
+        binding.rulesUpdateIntervalSpinner.isEnabled = binding.autoRulesUpdateSwitch.isChecked
+        binding.autoRulesUpdateSwitch.setOnCheckedChangeListener { _, isChecked ->
+            SchedulePreferences.setAutoRulesUpdateEnabled(this, isChecked)
+            binding.rulesUpdateIntervalSpinner.isEnabled = isChecked
+            ScheduleManager.applySchedule(this)
+        }
+        binding.rulesUpdateIntervalSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, pos: Int, id: Long) {
+                SchedulePreferences.setAutoRulesUpdateInterval(this@SettingsActivity, SchedulePreferences.rulesIntervalEntries[pos].first)
+                ScheduleManager.applySchedule(this@SettingsActivity)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
         binding.customRulesButton.setOnClickListener {
             startActivity(Intent(this, CustomRulesActivity::class.java))
         }

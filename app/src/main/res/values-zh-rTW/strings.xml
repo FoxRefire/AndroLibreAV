@@ -49,4 +49,13 @@
     <string name="app_info_open">開啟應用程式設定</string>
     <string name="settings_skip_system_apps">略過系統應用程式</string>
     <string name="settings_skip_system_apps_desc">啟用時僅掃描使用者安裝的應用程式，系統應用程式將被排除。</string>
+    <string name="settings_periodic_scan">定期掃描</string>
+    <string name="settings_periodic_scan_desc">依所選間隔自動執行掃描。</string>
+    <string name="settings_scan_interval">掃描間隔</string>
+    <string name="settings_auto_rules_update">規則自動更新</string>
+    <string name="settings_auto_rules_update_desc">在背景自動下載並更新 yara-forge 規則。</string>
+    <string name="settings_rules_update_interval">更新間隔</string>
+    <string name="settings_interval_daily">每天</string>
+    <string name="settings_interval_3days">每 3 天</string>
+    <string name="settings_interval_weekly">每週</string>
 </resources>

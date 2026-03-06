@@ -48,6 +48,15 @@
     <string name="uninstall_open">Opens uninstall screen</string>
     <string name="settings_skip_system_apps">Skip system apps</string>
     <string name="settings_skip_system_apps_desc">When enabled, only user-installed apps are scanned; system apps are excluded.</string>
+    <string name="settings_periodic_scan">Periodic scan</string>
+    <string name="settings_periodic_scan_desc">Automatically run a scan at the selected interval.</string>
+    <string name="settings_scan_interval">Scan interval</string>
+    <string name="settings_auto_rules_update">Auto rules update</string>
+    <string name="settings_auto_rules_update_desc">Automatically download and update yara-forge rules in the background.</string>
+    <string name="settings_rules_update_interval">Rules update interval</string>
+    <string name="settings_interval_daily">Daily</string>
+    <string name="settings_interval_3days">Every 3 days</string>
+    <string name="settings_interval_weekly">Weekly</string>
     <string name="app_info_open">Opens app settings</string>
 </resources>
 

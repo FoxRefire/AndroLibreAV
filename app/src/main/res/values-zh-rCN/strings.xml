@@ -49,4 +49,13 @@
     <string name="app_info_open">打开应用设置</string>
     <string name="settings_skip_system_apps">跳过系统应用</string>
     <string name="settings_skip_system_apps_desc">启用时仅扫描用户安装的应用，系统应用将被排除。</string>
+    <string name="settings_periodic_scan">定期扫描</string>
+    <string name="settings_periodic_scan_desc">按所选间隔自动执行扫描。</string>
+    <string name="settings_scan_interval">扫描间隔</string>
+    <string name="settings_auto_rules_update">规则自动更新</string>
+    <string name="settings_auto_rules_update_desc">在后台自动下载并更新 yara-forge 规则。</string>
+    <string name="settings_rules_update_interval">更新间隔</string>
+    <string name="settings_interval_daily">每天</string>
+    <string name="settings_interval_3days">每 3 天</string>
+    <string name="settings_interval_weekly">每周</string>
 </resources>

@@ -49,4 +49,13 @@
     <string name="app_info_open">앱 설정 열기</string>
     <string name="settings_skip_system_apps">시스템 앱 건너뛰기</string>
     <string name="settings_skip_system_apps_desc">활성화하면 사용자가 설치한 앱만 스캔하고 시스템 앱은 제외됩니다.</string>
+    <string name="settings_periodic_scan">정기 스캔</string>
+    <string name="settings_periodic_scan_desc">선택한 간격으로 자동 스캔을 실행합니다.</string>
+    <string name="settings_scan_interval">스캔 간격</string>
+    <string name="settings_auto_rules_update">규칙 자동 업데이트</string>
+    <string name="settings_auto_rules_update_desc">백그라운드에서 yara-forge 규칙을 자동으로 다운로드하고 업데이트합니다.</string>
+    <string name="settings_rules_update_interval">업데이트 간격</string>
+    <string name="settings_interval_daily">매일</string>
+    <string name="settings_interval_3days">3일마다</string>
+    <string name="settings_interval_weekly">매주</string>
 </resources>

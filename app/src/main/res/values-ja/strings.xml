@@ -49,4 +49,13 @@
     <string name="app_info_open">アプリ設定を開く</string>
     <string name="settings_skip_system_apps">システムアプリをスキャンしない</string>
     <string name="settings_skip_system_apps_desc">有効にするとユーザーがインストールしたアプリのみスキャンし、システムアプリは除外されます。</string>
+    <string name="settings_periodic_scan">定期スキャン</string>
+    <string name="settings_periodic_scan_desc">選択した間隔で自動的にスキャンを実行します。</string>
+    <string name="settings_scan_interval">スキャン間隔</string>
+    <string name="settings_auto_rules_update">定義ファイルの自動更新</string>
+    <string name="settings_auto_rules_update_desc">バックグラウンドでyara-forgeルールを自動的にダウンロード・更新します。</string>
+    <string name="settings_rules_update_interval">更新間隔</string>
+    <string name="settings_interval_daily">毎日</string>
+    <string name="settings_interval_3days">3日ごと</string>
+    <string name="settings_interval_weekly">毎週</string>
 </resources>
