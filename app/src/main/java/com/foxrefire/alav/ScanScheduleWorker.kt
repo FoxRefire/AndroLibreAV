@@ -1,4 +1,4 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.content.Intent
 import android.os.Build

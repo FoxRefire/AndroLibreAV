@@ -1,4 +1,4 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

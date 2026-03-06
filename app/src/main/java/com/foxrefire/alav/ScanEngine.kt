@@ -1,4 +1,4 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.content.Context
 import android.content.pm.ApplicationInfo

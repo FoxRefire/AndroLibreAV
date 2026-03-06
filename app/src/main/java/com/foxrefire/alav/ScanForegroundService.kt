@@ -1,4 +1,4 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -180,7 +180,7 @@ class ScanForegroundService : Service() {
         private const val CHANNEL_ID = "scan_progress"
         private const val NOTIFICATION_ID = 1001
 
-        const val ACTION_START_SCAN = "com.example.yaraxsample.START_SCAN"
-        const val ACTION_STOP_SCAN = "com.example.yaraxsample.STOP_SCAN"
+        const val ACTION_START_SCAN = "com.foxrefire.alav.START_SCAN"
+        const val ACTION_STOP_SCAN = "com.foxrefire.alav.STOP_SCAN"
     }
 }

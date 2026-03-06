@@ -1,11 +1,11 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import com.example.yaraxsample.databinding.ActivitySettingsBinding
+import com.foxrefire.alav.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 

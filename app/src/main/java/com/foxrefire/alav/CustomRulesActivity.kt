@@ -1,9 +1,9 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.yaraxsample.databinding.ActivityCustomRulesBinding
+import com.foxrefire.alav.databinding.ActivityCustomRulesBinding
 
 /**
  * Activity for editing and saving user-defined YARA rules.

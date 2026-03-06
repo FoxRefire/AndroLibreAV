@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">YARA Anti-Malware</string>
+    <string name="app_name">AndroLibreAV</string>
     <string name="update_rules">Update rules</string>
     <string name="start_scan">Start scan</string>
     <string name="status_ready">Update rules first, then start the scan</string>
@@ -40,7 +40,7 @@
     <string name="settings_about">About this app</string>
     <string name="about_title">About</string>
     <string name="about_version">Version %1$s</string>
-    <string name="about_credits">This app uses:\n\n• YARA-X by FoxRefire - Pattern matching for malware detection\n• yara-forge rules by YARAHQ - Community YARA rule collection\n\nYARA Anti-Malware scans installed apps using YARA rules to help identify potentially malicious applications.</string>
+    <string name="about_credits">This app uses:\n\n• YARA-X by FoxRefire - Pattern matching for malware detection\n• yara-forge rules by YARAHQ - Community YARA rule collection\n\nAndroLibreAV scans installed apps using YARA rules to help identify potentially malicious applications.</string>
     <string name="threat_details">Detection details</string>
     <string name="detections_by_file">Detections by file</string>
     <string name="uninstall">Uninstall</string>

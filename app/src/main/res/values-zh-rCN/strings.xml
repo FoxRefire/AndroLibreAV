@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">YARA 反病毒</string>
+    <string name="app_name">AndroLibreAV</string>
     <string name="update_rules">更新规则</string>
     <string name="start_scan">开始扫描</string>
     <string name="status_ready">请先更新规则，然后开始扫描</string>

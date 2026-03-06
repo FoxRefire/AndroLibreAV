@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">YARA 악성코드 방지</string>
+    <string name="app_name">AndroLibreAV</string>
     <string name="update_rules">규칙 업데이트</string>
     <string name="start_scan">스캔 시작</string>
     <string name="status_ready">규칙을 먼저 업데이트한 후 스캔을 시작하세요</string>

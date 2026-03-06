@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">YARA Anti-Malware</string>
+    <string name="app_name">AndroLibreAV</string>
     <string name="update_rules">Regeln aktualisieren</string>
     <string name="start_scan">Scan starten</string>
     <string name="status_ready">Aktualisiere zuerst die Regeln und starte dann den Scan</string>

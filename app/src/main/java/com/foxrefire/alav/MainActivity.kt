@@ -1,4 +1,4 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.Manifest
 import android.content.Intent
@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.yaraxsample.databinding.ActivityMainBinding
+import com.foxrefire.alav.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                 ScanProgressHolder.state.collect { state ->
                 val percent = if (state.totalApps > 0) (state.scannedApps * 100) / state.totalApps else 0
                 binding.statusText.text = when {
-                    state.error != null -> state.error ?: ""
+                    state.error != null -> state.error
                     state.totalApps > 0 -> getString(R.string.scanning, state.scannedApps, state.totalApps, percent)
                     state.isScanning -> getString(R.string.scanning_preparing)
                     state.scannedApps == 0 && state.totalApps == 0 -> getString(R.string.scanning_preparing)

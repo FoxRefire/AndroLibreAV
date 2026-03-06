@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.yaraxsample"
+    namespace = "com.foxrefire.alav"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.yaraxsample"
+        applicationId = "com.foxrefire.alav"
         minSdk = 21
         targetSdk = 34
         versionCode = 1

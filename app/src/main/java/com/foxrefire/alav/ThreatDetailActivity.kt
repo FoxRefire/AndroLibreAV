@@ -1,7 +1,8 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,12 +15,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.yaraxsample.databinding.ActivityThreatDetailBinding
-import com.example.yaraxsample.databinding.ItemDetectionDetailBinding
+import com.foxrefire.alav.databinding.ActivityThreatDetailBinding
+import com.foxrefire.alav.databinding.ItemDetectionDetailBinding
 
 class ThreatDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityThreatDetailBinding
+
+    private val uninstallLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        // User returned from uninstall UI; optionally refresh or finish
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,16 +91,9 @@ class ThreatDetailActivity : AppCompatActivity() {
             data = Uri.fromParts("package", pkg, null)
         }
         try {
-            startActivityForResult(intent, REQUEST_UNINSTALL)
+            uninstallLauncher.launch(intent)
         } catch (e: Exception) {
             android.widget.Toast.makeText(this, R.string.uninstall_open, android.widget.Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_UNINSTALL) {
-            // User returned from uninstall UI; optionally refresh or finish
         }
     }
 
@@ -122,6 +122,5 @@ class ThreatDetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_SCAN_RESULT = "scan_result"
-        private const val REQUEST_UNINSTALL = 1001
     }
 }

@@ -1,8 +1,8 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.yaraxsample.databinding.ActivityAboutBinding
+import com.foxrefire.alav.databinding.ActivityAboutBinding
 
 class AboutActivity : AppCompatActivity() {
 

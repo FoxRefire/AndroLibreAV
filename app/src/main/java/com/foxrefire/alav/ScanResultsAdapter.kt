@@ -1,4 +1,4 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.content.pm.PackageManager
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.yaraxsample.databinding.ItemScanResultBinding
+import com.foxrefire.alav.databinding.ItemScanResultBinding
 
 class ScanResultsAdapter(
     private val packageManager: PackageManager,

@@ -1,7 +1,8 @@
-package com.example.yaraxsample
+package com.foxrefire.alav
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.yaraxsample.databinding.ActivityFileScanBinding
+import com.foxrefire.alav.databinding.ActivityFileScanBinding
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -62,16 +63,26 @@ class FileScanActivity : AppCompatActivity() {
 
         when {
             intent?.action == Intent.ACTION_SEND && intent.type != null -> {
-                (intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM))?.let { uri ->
+                val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra(Intent.EXTRA_STREAM)
+                }
+                if (uri != null) {
                     launchFileScan(listOf(uri))
-                } ?: run {
+                } else {
                     Toast.makeText(this, R.string.scan_file_invalid_share, Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
             intent?.action == Intent.ACTION_SEND_MULTIPLE && intent.type != null -> {
-                @Suppress("UNCHECKED_CAST")
-                val uris = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
+                val uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
+                }
                 if (!uris.isNullOrEmpty()) {
                     launchFileScan(uris)
                 } else {
@@ -79,13 +90,18 @@ class FileScanActivity : AppCompatActivity() {
                     finish()
                 }
             }
-            intent?.getParcelableArrayListExtra<Uri>(EXTRA_URIS) != null -> {
-                @Suppress("UNCHECKED_CAST")
-                launchFileScan(intent.getParcelableArrayListExtra(EXTRA_URIS)!!)
-            }
             else -> {
-                // Opened from menu without URIs - show picker
-                multiDocumentPicker.launch(arrayOf("*/*"))
+                val extraUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent?.getParcelableArrayListExtra(EXTRA_URIS, Uri::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent?.getParcelableArrayListExtra(EXTRA_URIS)
+                }
+                if (!extraUris.isNullOrEmpty()) {
+                    launchFileScan(extraUris)
+                } else {
+                    multiDocumentPicker.launch(arrayOf("*/*"))
+                }
             }
         }
     }

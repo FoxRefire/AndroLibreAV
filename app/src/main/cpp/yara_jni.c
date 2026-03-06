@@ -37,7 +37,7 @@ static void matching_rule_callback(const struct YRX_RULE *rule, void *user_data)
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_example_yaraxsample_YaraX_nativeCompileRules(JNIEnv *env, jclass clazz, jstring rules_src) {
+Java_com_foxrefire_alav_YaraX_nativeCompileRules(JNIEnv *env, jclass clazz, jstring rules_src) {
     if (!rules_src) return 0;
 
     const char *src = (*env)->GetStringUTFChars(env, rules_src, NULL);
@@ -57,7 +57,7 @@ Java_com_example_yaraxsample_YaraX_nativeCompileRules(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_example_yaraxsample_YaraX_nativeCreateScanner(JNIEnv *env, jclass clazz, jlong rules_handle) {
+Java_com_foxrefire_alav_YaraX_nativeCreateScanner(JNIEnv *env, jclass clazz, jlong rules_handle) {
     if (rules_handle == 0) return 0;
 
     struct YRX_RULES *rules = (struct YRX_RULES *)(uintptr_t)rules_handle;
@@ -70,7 +70,7 @@ Java_com_example_yaraxsample_YaraX_nativeCreateScanner(JNIEnv *env, jclass clazz
 }
 
 JNIEXPORT jobject JNICALL
-Java_com_example_yaraxsample_YaraX_nativeScanBytes(JNIEnv *env, jclass clazz,
+Java_com_foxrefire_alav_YaraX_nativeScanBytes(JNIEnv *env, jclass clazz,
         jlong scanner_handle, jbyteArray data) {
     if (scanner_handle == 0) return NULL;
 
@@ -125,21 +125,21 @@ Java_com_example_yaraxsample_YaraX_nativeScanBytes(JNIEnv *env, jclass clazz,
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_yaraxsample_YaraX_nativeDestroyScanner(JNIEnv *env, jclass clazz, jlong scanner_handle) {
+Java_com_foxrefire_alav_YaraX_nativeDestroyScanner(JNIEnv *env, jclass clazz, jlong scanner_handle) {
     if (scanner_handle != 0) {
         yrx_scanner_destroy((struct YRX_SCANNER *)(uintptr_t)scanner_handle);
     }
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_yaraxsample_YaraX_nativeDestroyRules(JNIEnv *env, jclass clazz, jlong rules_handle) {
+Java_com_foxrefire_alav_YaraX_nativeDestroyRules(JNIEnv *env, jclass clazz, jlong rules_handle) {
     if (rules_handle != 0) {
         yrx_rules_destroy((struct YRX_RULES *)(uintptr_t)rules_handle);
     }
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_example_yaraxsample_YaraX_nativeLastError(JNIEnv *env, jclass clazz) {
+Java_com_foxrefire_alav_YaraX_nativeLastError(JNIEnv *env, jclass clazz) {
     const char *err = yrx_last_error();
     if (!err) return NULL;
     return (*env)->NewStringUTF(env, err);
@@ -172,7 +172,7 @@ static char *read_file_contents(const char *path, size_t *out_len) {
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_example_yaraxsample_YaraX_nativeCompileRulesFromPaths(JNIEnv *env, jclass clazz,
+Java_com_foxrefire_alav_YaraX_nativeCompileRulesFromPaths(JNIEnv *env, jclass clazz,
         jobjectArray yar_paths, jstring include_dir) {
     if (!yar_paths || !include_dir) return 0;
 
