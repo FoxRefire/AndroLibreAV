@@ -44,6 +44,11 @@ object ScanProgressHolder {
         _state.value = _state.value.copy(isScanning = false, error = message)
     }
 
+    /** Stops scanning state while keeping current results (e.g. after user cancels). */
+    fun setScanningStopped() {
+        _state.value = _state.value.copy(isScanning = false)
+    }
+
     fun clear() {
         _state.value = State()
     }

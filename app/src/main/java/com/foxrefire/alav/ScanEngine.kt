@@ -7,6 +7,8 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -72,6 +74,7 @@ class ScanEngine(private val context: Context) {
             val scanner = yaraRules.createScanner()
             scanner.use {
                 for (appInfo in apps) {
+                    currentCoroutineContext().ensureActive()
                     val pkg = appInfo.packageName
                     val appName = getAppLabel(appInfo)
                     emit(ScanProgress(scanned, total, pkg, appName, results.toList()))
@@ -125,6 +128,7 @@ class ScanEngine(private val context: Context) {
                             if (ScanPreferences.getScanApkEntries(context)) {
                                 ZipFile(apkPath).use { zip ->
                                     for (entry in zip.entries()) {
+                                        currentCoroutineContext().ensureActive()
                                         if (entry.isDirectory) continue
                                         if (entry.size > MAX_FILE_SIZE_BYTES) continue
                                         if (entry.size <= 0) continue

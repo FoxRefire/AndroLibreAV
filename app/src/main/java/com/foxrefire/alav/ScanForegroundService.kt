@@ -33,7 +33,13 @@ class ScanForegroundService : Service() {
             runScan()
         } else if (intent?.action == ACTION_STOP_SCAN) {
             scanJob?.cancel()
-            stopForeground(STOP_FOREGROUND_REMOVE)
+            ScanProgressHolder.setScanningStopped()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                stopForeground(Service.STOP_FOREGROUND_REMOVE)
+            } else {
+                @Suppress("DEPRECATION")
+                stopForeground(true)
+            }
             stopSelf()
         }
         return START_NOT_STICKY
@@ -142,6 +148,13 @@ class ScanForegroundService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val stopIntent = PendingIntent.getService(
+            this,
+            0,
+            Intent(this, ScanForegroundService::class.java).apply { action = ACTION_STOP_SCAN },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_scan_title))
             .setContentText(contentText)
@@ -151,6 +164,7 @@ class ScanForegroundService : Service() {
             .apply {
                 if (total > 0 && completeMessage == null) {
                     setProgress(total, scanned, false)
+                    addAction(android.R.drawable.ic_media_pause, getString(R.string.stop_scan), stopIntent)
                 } else if (completeMessage != null) {
                     setProgress(0, 0, false)
                     setAutoCancel(true)

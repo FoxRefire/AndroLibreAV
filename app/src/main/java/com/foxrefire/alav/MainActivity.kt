@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scanEngine: ScanEngine
     private lateinit var resultsAdapter: ScanResultsAdapter
     private var hasCompletedScan = false
+    /** True after startScan() until the service sends the first progress (isScanning or error). */
+    private var scanStartRequested = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +49,9 @@ class MainActivity : AppCompatActivity() {
         updateStatusFromRules()
 
         binding.updateRulesButton.setOnClickListener { updateRules() }
-        binding.scanButton.setOnClickListener { startScan() }
+        binding.scanButton.setOnClickListener {
+            if (ScanProgressHolder.state.value.isScanning) stopScan() else startScan()
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestQueryAllPackagesIfNeeded()
@@ -133,7 +137,10 @@ class MainActivity : AppCompatActivity() {
             }
             binding.progressBar.progress = percent
             binding.progressBar.isVisible = state.isScanning
-            binding.scanButton.isEnabled = !state.isScanning
+            binding.scanButton.text = if (state.isScanning) getString(R.string.stop_scan) else getString(R.string.start_scan)
+            binding.scanButton.isEnabled = state.isScanning || state.error != null ||
+                (state.totalApps > 0 && !state.isScanning) ||
+                (state.totalApps == 0 && state.error == null && !scanStartRequested)
             binding.updateRulesButton.isEnabled = !state.isScanning
             resultsAdapter.submitList(state.results)
 
@@ -159,9 +166,14 @@ class MainActivity : AppCompatActivity() {
                 updateEmptyViewVisibility(state.results)
             }
         } else if (state.error != null) {
+            scanStartRequested = false
             binding.scanButton.isEnabled = true
             binding.updateRulesButton.isEnabled = true
             binding.progressBar.isVisible = false
+        } else {
+            // Idle or preparing (totalApps == 0, no error)
+            binding.scanButton.text = getString(R.string.start_scan)
+            binding.scanButton.isEnabled = !scanStartRequested
         }
     }
 
@@ -195,6 +207,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         ScanProgressHolder.clear()
+        scanStartRequested = true
         binding.scanButton.isEnabled = false
         binding.updateRulesButton.isEnabled = false
         binding.progressBar.isVisible = true
@@ -224,6 +237,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 binding.progressBar.progress = percent
                 resultsAdapter.submitList(state.results)
+                binding.scanButton.text = if (state.isScanning) getString(R.string.stop_scan) else getString(R.string.start_scan)
+                if (state.isScanning || state.error != null || (state.totalApps > 0 && !state.isScanning)) scanStartRequested = false
+                binding.scanButton.isEnabled = state.isScanning || state.error != null ||
+                    (state.totalApps > 0 && !state.isScanning) ||
+                    (state.totalApps == 0 && state.error == null && !scanStartRequested)
 
                 val showScanningCard = state.isScanning && state.currentScanningPackage != null
                 binding.scanningCard.isVisible = showScanningCard
@@ -246,6 +264,7 @@ class MainActivity : AppCompatActivity() {
                 val scanFailed = state.error != null
                 if (scanComplete || scanFailed) {
                     hasCompletedScan = scanComplete
+                    binding.scanButton.text = getString(R.string.start_scan)
                     binding.scanButton.isEnabled = true
                     binding.updateRulesButton.isEnabled = true
                     binding.progressBar.isVisible = false
@@ -267,6 +286,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun stopScan() {
+        val intent = Intent(this, ScanForegroundService::class.java).apply {
+            action = ScanForegroundService.ACTION_STOP_SCAN
+        }
+        startService(intent)
     }
 
     private fun updateEmptyViewVisibility(results: List<ScanResult>) {

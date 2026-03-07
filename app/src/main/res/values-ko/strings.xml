@@ -3,6 +3,8 @@
     <string name="app_name">AndroLibreAV</string>
     <string name="update_rules">규칙 업데이트</string>
     <string name="start_scan">스캔 시작</string>
+    <string name="stop_scan">스캔 중지</string>
+    <string name="scan_cancelled">스캔이 취소되었습니다</string>
     <string name="status_ready">규칙을 먼저 업데이트한 후 스캔을 시작하세요</string>
     <string name="status_ready_short">스캔 시작</string>
     <string name="scan_results">스캔 결과</string>

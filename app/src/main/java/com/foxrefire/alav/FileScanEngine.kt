@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -46,6 +48,7 @@ class FileScanEngine(private val context: Context) {
             val scanner = yaraRules.createScanner()
             scanner.use {
                 for (uri in uris) {
+                    currentCoroutineContext().ensureActive()
                     val displayName = getDisplayName(uri)
                     emit(FileScanProgress(scanned, total, displayName, results.toList()))
 

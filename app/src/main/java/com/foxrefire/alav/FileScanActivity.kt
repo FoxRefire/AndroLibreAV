@@ -11,6 +11,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.foxrefire.alav.databinding.ActivityFileScanBinding
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -25,6 +27,9 @@ class FileScanActivity : AppCompatActivity() {
     private lateinit var fileScanEngine: FileScanEngine
     private lateinit var rulesRepo: RulesRepository
     private lateinit var resultsAdapter: ScanResultsAdapter
+
+    private var scanJob: Job? = null
+    private var isScanning = false
 
     private val documentPicker = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -106,6 +111,26 @@ class FileScanActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
+        menuInflater.inflate(R.menu.file_scan_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: android.view.Menu): Boolean {
+        menu.findItem(R.id.action_stop_scan)?.isVisible = isScanning
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_stop_scan -> {
+                scanJob?.cancel()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun launchFileScan(uris: List<Uri>) {
         if (!rulesRepo.hasAnyRules()) {
             Toast.makeText(this, R.string.rules_load_failed, Toast.LENGTH_LONG).show()
@@ -118,15 +143,28 @@ class FileScanActivity : AppCompatActivity() {
         binding.progressBar.isVisible = true
         binding.emptyText.isVisible = false
         resultsAdapter.submitList(emptyList())
+        isScanning = true
+        invalidateOptionsMenu()
 
-        lifecycleScope.launch {
+        scanJob = lifecycleScope.launch {
             fileScanEngine.scanFiles(rulesRepo, uris)
                 .catch { e ->
                     runOnUiThread {
-                        Toast.makeText(this@FileScanActivity, getString(R.string.scan_error, e.message), Toast.LENGTH_LONG).show()
+                        isScanning = false
+                        invalidateOptionsMenu()
                         binding.progressBar.isVisible = false
+                        when (e) {
+                            is CancellationException -> {
+                                binding.statusText.text = getString(R.string.scan_cancelled)
+                                Toast.makeText(this@FileScanActivity, R.string.scan_cancelled, Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(this@FileScanActivity, getString(R.string.scan_error, e.message), Toast.LENGTH_LONG).show()
+                                finish()
+                            }
+                        }
                     }
-                    finish()
+                    if (e !is CancellationException) finish()
                 }
                 .collect { progress ->
                     if (progress.totalCount > 0) {
@@ -139,6 +177,8 @@ class FileScanActivity : AppCompatActivity() {
                     resultsAdapter.submitList(progress.results)
 
                     if (progress.scannedCount >= progress.totalCount) {
+                        isScanning = false
+                        invalidateOptionsMenu()
                         binding.progressBar.isVisible = false
                         binding.statusText.text = if (progress.results.isEmpty()) {
                             getString(R.string.no_threats)

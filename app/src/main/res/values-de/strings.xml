@@ -3,6 +3,8 @@
     <string name="app_name">AndroLibreAV</string>
     <string name="update_rules">Regeln aktualisieren</string>
     <string name="start_scan">Scan starten</string>
+    <string name="stop_scan">Scan stoppen</string>
+    <string name="scan_cancelled">Scan abgebrochen</string>
     <string name="status_ready">Aktualisiere zuerst die Regeln und starte dann den Scan</string>
     <string name="status_ready_short">Scan starten</string>
     <string name="scan_results">Scanergebnisse</string>
