@@ -40,6 +40,7 @@ class FileScanEngine(private val context: Context) {
         val results = mutableListOf<ScanResult>()
         var scanned = 0
         val total = uris.size
+        val excludedRules = ScanPreferences.getExcludedRuleNames(context)
 
         rules.use { yaraRules ->
             val scanner = yaraRules.createScanner()
@@ -48,7 +49,7 @@ class FileScanEngine(private val context: Context) {
                     val displayName = getDisplayName(uri)
                     emit(FileScanProgress(scanned, total, displayName, results.toList()))
 
-                    val fileMatches = scanUri(context, uri, scanner)
+                    val fileMatches = scanUri(context, uri, scanner, excludedRules)
                     if (fileMatches.isNotEmpty()) {
                         results.add(
                             ScanResult(
@@ -68,7 +69,7 @@ class FileScanEngine(private val context: Context) {
         emit(FileScanProgress(total, total, null, results))
     }.flowOn(Dispatchers.IO)
 
-    private fun scanUri(context: Context, uri: Uri, scanner: YaraScanner): List<FileMatch> {
+    private fun scanUri(context: Context, uri: Uri, scanner: YaraScanner, excludedRules: Set<String>): List<FileMatch> {
         val fileMatches = mutableListOf<FileMatch>()
         val name = getDisplayName(uri)
         val isApk = name.lowercase().endsWith(".apk") || isZipLike(context, uri)
@@ -86,7 +87,7 @@ class FileScanEngine(private val context: Context) {
                 }
                 val apkHead = buffer.copyOf(total)
                 if (apkHead.isNotEmpty()) {
-                    val rawMatches = scanner.scan(apkHead)
+                    val rawMatches = scanner.scan(apkHead).filter { it !in excludedRules }
                     if (rawMatches.isNotEmpty()) {
                         fileMatches.add(FileMatch(name, rawMatches))
                     }
@@ -100,7 +101,7 @@ class FileScanEngine(private val context: Context) {
                             if (!entry.isDirectory && entry.size != 0L && (entry.size < 0 || entry.size <= MAX_FILE_SIZE_BYTES)) {
                                 try {
                                     val data = zis.readBytes()
-                                    val matches = scanner.scan(data)
+                                    val matches = scanner.scan(data).filter { it !in excludedRules }
                                     if (matches.isNotEmpty()) {
                                         fileMatches.add(FileMatch(entry.name, matches))
                                     }
@@ -119,7 +120,7 @@ class FileScanEngine(private val context: Context) {
                 context.contentResolver.openInputStream(uri)?.use { input ->
                     val data = input.readBytes()
                     if (data.size <= MAX_FILE_SIZE_BYTES) {
-                        val matches = scanner.scan(data)
+                        val matches = scanner.scan(data).filter { it !in excludedRules }
                         if (matches.isNotEmpty()) {
                             fileMatches.add(FileMatch(name, matches))
                         }

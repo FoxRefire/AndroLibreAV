@@ -75,4 +75,9 @@
     <string name="settings_interval_weekly">毎週</string>
     <string name="scan_file">ファイルをスキャン</string>
     <string name="scan_file_invalid_share">スキャンするファイルがありません</string>
+    <string name="excluded_rules">検出から除外するルール</string>
+    <string name="excluded_rules_title">検出から除外するルール</string>
+    <string name="excluded_rules_hint">ここに書いたルール名は検出対象から除外されます。1行に1ルール名。これらのルールにマッチしても検出として表示されません。</string>
+    <string name="excluded_rules_save">保存</string>
+    <string name="excluded_rules_saved">除外ルールを保存しました</string>
 </resources>

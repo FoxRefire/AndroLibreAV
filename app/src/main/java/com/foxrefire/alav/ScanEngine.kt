@@ -5,6 +5,8 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -49,6 +51,23 @@ class ScanEngine(private val context: Context) {
         val results = mutableListOf<ScanResult>()
         var scanned = 0
 
+        val excludedRules = ScanPreferences.getExcludedRuleNames(context)
+        // #region agent log
+        try {
+            val payload = JSONObject().apply {
+                put("sessionId", "e19a5f")
+                put("hypothesisId", "A")
+                put("location", "ScanEngine.kt:excludedRules")
+                put("message", "excluded rules at scan start")
+                put("data", JSONObject().apply {
+                    put("size", excludedRules.size)
+                    put("list", JSONArray(excludedRules.toList()))
+                })
+                put("timestamp", System.currentTimeMillis())
+            }.toString()
+            Log.d("ExcludedRulesDebug", payload)
+        } catch (_: Exception) {}
+        // #endregion
         rules.use { yaraRules ->
             val scanner = yaraRules.createScanner()
             scanner.use {
@@ -76,7 +95,29 @@ class ScanEngine(private val context: Context) {
                                 buffer.copyOf(bytesRead)
                             }
                             if (apkBytes.isNotEmpty()) {
-                                val rawMatches = scanner.scan(apkBytes)
+                                val rawApkMatches = scanner.scan(apkBytes)
+                                // #region agent log
+                                if (rawApkMatches.isNotEmpty()) {
+                                    try {
+                                        val filteredApk = rawApkMatches.filter { it !in excludedRules }
+                                        val payload = JSONObject().apply {
+                                            put("sessionId", "e19a5f")
+                                            put("hypothesisId", "B")
+                                            put("location", "ScanEngine.kt:apkFileScan")
+                                            put("message", "APK file raw vs filtered")
+                                            put("data", JSONObject().apply {
+                                                put("apkName", apkFile.name)
+                                                put("rawMatches", JSONArray(rawApkMatches))
+                                                put("filteredSize", filteredApk.size)
+                                                put("excludedContainsFirst", rawApkMatches.firstOrNull()?.let { it in excludedRules })
+                                            })
+                                            put("timestamp", System.currentTimeMillis())
+                                        }.toString()
+                                        Log.d("ExcludedRulesDebug", payload)
+                                    } catch (_: Exception) {}
+                                }
+                                // #endregion
+                                val rawMatches = rawApkMatches.filter { it !in excludedRules }
                                 if (rawMatches.isNotEmpty()) {
                                     fileMatches.add(FileMatch(apkFile.name, rawMatches))
                                 }
@@ -91,7 +132,30 @@ class ScanEngine(private val context: Context) {
                                         try {
                                             zip.getInputStream(entry).use { input ->
                                                 val data = input.readBytes()
-                                                val matches = scanner.scan(data)
+                                                val rawMatches = scanner.scan(data)
+                                                // #region agent log
+                                                if (rawMatches.isNotEmpty()) {
+                                                    try {
+                                                        val filtered = rawMatches.filter { it !in excludedRules }
+                                                        val payload = JSONObject().apply {
+                                                            put("sessionId", "e19a5f")
+                                                            put("hypothesisId", "B")
+                                                            put("location", "ScanEngine.kt:entryFilter")
+                                                            put("message", "raw vs filtered match names")
+                                                            put("data", JSONObject().apply {
+                                                                put("entry", entry.name)
+                                                                put("rawMatches", JSONArray(rawMatches))
+                                                                put("filteredSize", filtered.size)
+                                                                put("filtered", JSONArray(filtered))
+                                                                put("excludedContainsFirst", rawMatches.firstOrNull()?.let { it in excludedRules })
+                                                            })
+                                                            put("timestamp", System.currentTimeMillis())
+                                                        }.toString()
+                                                        Log.d("ExcludedRulesDebug", payload)
+                                                    } catch (_: Exception) {}
+                                                }
+                                                // #endregion
+                                                val matches = rawMatches.filter { it !in excludedRules }
                                                 if (matches.isNotEmpty()) {
                                                     fileMatches.add(
                                                         FileMatch(entry.name, matches)

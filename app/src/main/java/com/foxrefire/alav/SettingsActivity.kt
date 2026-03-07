@@ -111,6 +111,10 @@ class SettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        binding.excludedRulesButton.setOnClickListener {
+            startActivity(Intent(this, ExcludedRulesActivity::class.java))
+        }
+
         binding.customRulesButton.setOnClickListener {
             startActivity(Intent(this, CustomRulesActivity::class.java))
         }

@@ -75,5 +75,10 @@
     <string name="app_info_open">Opens app settings</string>
     <string name="scan_file">Scan file</string>
     <string name="scan_file_invalid_share">No file received to scan</string>
+    <string name="excluded_rules">Excluded rules</string>
+    <string name="excluded_rules_title">Excluded rules</string>
+    <string name="excluded_rules_hint">Rule names listed here are excluded from detection. One rule name per line. Matches for these rules will not be reported.</string>
+    <string name="excluded_rules_save">Save</string>
+    <string name="excluded_rules_saved">Excluded rules saved</string>
 </resources>
 

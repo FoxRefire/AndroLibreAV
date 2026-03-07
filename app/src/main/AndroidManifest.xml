@@ -49,6 +49,12 @@
             android:title="@string/custom_rules_title"
             tools:ignore="ManifestResource" />
         <activity
+            android:name=".ExcludedRulesActivity"
+            android:exported="false"
+            android:title="@string/excluded_rules_title"
+            android:parentActivityName=".SettingsActivity"
+            tools:ignore="ManifestResource" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:title="@string/settings_title"
