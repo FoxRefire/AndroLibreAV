@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             binding.scanButton.text = if (state.isScanning) getString(R.string.stop_scan) else getString(R.string.start_scan)
             binding.scanButton.isEnabled = state.isScanning || state.error != null ||
                 (state.totalApps > 0 && !state.isScanning) ||
-                (state.totalApps == 0 && state.error == null && !scanStartRequested)
+                (state.totalApps == 0 && !scanStartRequested)
             binding.updateRulesButton.isEnabled = !state.isScanning
             resultsAdapter.submitList(state.results)
 
@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity() {
                 if (state.isScanning || state.error != null || (state.totalApps > 0 && !state.isScanning)) scanStartRequested = false
                 binding.scanButton.isEnabled = state.isScanning || state.error != null ||
                     (state.totalApps > 0 && !state.isScanning) ||
-                    (state.totalApps == 0 && state.error == null && !scanStartRequested)
+                    (state.totalApps == 0 && !scanStartRequested)
 
                 val showScanningCard = state.isScanning && state.currentScanningPackage != null
                 binding.scanningCard.isVisible = showScanningCard

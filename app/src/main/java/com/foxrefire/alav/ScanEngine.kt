@@ -5,14 +5,13 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
-import org.json.JSONArray
-import org.json.JSONObject
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -24,6 +23,8 @@ class ScanEngine(private val context: Context) {
     companion object {
         private const val TAG = "ScanEngine"
         private const val MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024 // 20MB per entry
+        private const val IO_BUFFER_SIZE = 256 * 1024 // 256KB for faster I/O
+        private const val ENSURE_ACTIVE_EVERY_ENTRIES = 16 // Check cancellation every N zip entries
     }
 
     /**
@@ -54,22 +55,8 @@ class ScanEngine(private val context: Context) {
         var scanned = 0
 
         val excludedRules = ScanPreferences.getExcludedRuleNames(context)
-        // #region agent log
-        try {
-            val payload = JSONObject().apply {
-                put("sessionId", "e19a5f")
-                put("hypothesisId", "A")
-                put("location", "ScanEngine.kt:excludedRules")
-                put("message", "excluded rules at scan start")
-                put("data", JSONObject().apply {
-                    put("size", excludedRules.size)
-                    put("list", JSONArray(excludedRules.toList()))
-                })
-                put("timestamp", System.currentTimeMillis())
-            }.toString()
-            Log.d("ExcludedRulesDebug", payload)
-        } catch (_: Exception) {}
-        // #endregion
+        val maxApkBytes = ScanPreferences.getMaxApkScanSizeBytes(context)
+        val scanApkEntries = ScanPreferences.getScanApkEntries(context)
         rules.use { yaraRules ->
             val scanner = yaraRules.createScanner()
             scanner.use {
@@ -81,13 +68,11 @@ class ScanEngine(private val context: Context) {
 
                     val apkPaths = getApkPaths(appInfo)
                     val fileMatches = mutableListOf<FileMatch>()
-                    val maxApkBytes = ScanPreferences.getMaxApkScanSizeBytes(context)
                     for (apkPath in apkPaths) {
                         try {
-                            // Scan the APK file itself (before extraction)
                             val apkFile = File(apkPath)
                             val toRead = minOf(apkFile.length(), maxApkBytes).toInt()
-                            val apkBytes = apkFile.inputStream().use { input ->
+                            val apkBytes = BufferedInputStream(apkFile.inputStream(), IO_BUFFER_SIZE).use { input ->
                                 val buffer = ByteArray(toRead)
                                 var bytesRead = 0
                                 while (bytesRead < toRead) {
@@ -99,71 +84,26 @@ class ScanEngine(private val context: Context) {
                             }
                             if (apkBytes.isNotEmpty()) {
                                 val rawApkMatches = scanner.scan(apkBytes)
-                                // #region agent log
-                                if (rawApkMatches.isNotEmpty()) {
-                                    try {
-                                        val filteredApk = rawApkMatches.filter { it !in excludedRules }
-                                        val payload = JSONObject().apply {
-                                            put("sessionId", "e19a5f")
-                                            put("hypothesisId", "B")
-                                            put("location", "ScanEngine.kt:apkFileScan")
-                                            put("message", "APK file raw vs filtered")
-                                            put("data", JSONObject().apply {
-                                                put("apkName", apkFile.name)
-                                                put("rawMatches", JSONArray(rawApkMatches))
-                                                put("filteredSize", filteredApk.size)
-                                                put("excludedContainsFirst", rawApkMatches.firstOrNull()?.let { it in excludedRules })
-                                            })
-                                            put("timestamp", System.currentTimeMillis())
-                                        }.toString()
-                                        Log.d("ExcludedRulesDebug", payload)
-                                    } catch (_: Exception) {}
-                                }
-                                // #endregion
                                 val rawMatches = rawApkMatches.filter { it !in excludedRules }
                                 if (rawMatches.isNotEmpty()) {
                                     fileMatches.add(FileMatch(apkFile.name, rawMatches))
                                 }
                             }
-                            if (ScanPreferences.getScanApkEntries(context)) {
+                            if (scanApkEntries) {
                                 ZipFile(apkPath).use { zip ->
+                                    var entryIndex = 0
                                     for (entry in zip.entries()) {
-                                        currentCoroutineContext().ensureActive()
+                                        if (entryIndex++ % ENSURE_ACTIVE_EVERY_ENTRIES == 0) currentCoroutineContext().ensureActive()
                                         if (entry.isDirectory) continue
                                         if (entry.size > MAX_FILE_SIZE_BYTES) continue
                                         if (entry.size <= 0) continue
-
                                         try {
-                                            zip.getInputStream(entry).use { input ->
+                                            BufferedInputStream(zip.getInputStream(entry), IO_BUFFER_SIZE).use { input ->
                                                 val data = input.readBytes()
                                                 val rawMatches = scanner.scan(data)
-                                                // #region agent log
-                                                if (rawMatches.isNotEmpty()) {
-                                                    try {
-                                                        val filtered = rawMatches.filter { it !in excludedRules }
-                                                        val payload = JSONObject().apply {
-                                                            put("sessionId", "e19a5f")
-                                                            put("hypothesisId", "B")
-                                                            put("location", "ScanEngine.kt:entryFilter")
-                                                            put("message", "raw vs filtered match names")
-                                                            put("data", JSONObject().apply {
-                                                                put("entry", entry.name)
-                                                                put("rawMatches", JSONArray(rawMatches))
-                                                                put("filteredSize", filtered.size)
-                                                                put("filtered", JSONArray(filtered))
-                                                                put("excludedContainsFirst", rawMatches.firstOrNull()?.let { it in excludedRules })
-                                                            })
-                                                            put("timestamp", System.currentTimeMillis())
-                                                        }.toString()
-                                                        Log.d("ExcludedRulesDebug", payload)
-                                                    } catch (_: Exception) {}
-                                                }
-                                                // #endregion
                                                 val matches = rawMatches.filter { it !in excludedRules }
                                                 if (matches.isNotEmpty()) {
-                                                    fileMatches.add(
-                                                        FileMatch(entry.name, matches)
-                                                    )
+                                                    fileMatches.add(FileMatch(entry.name, matches))
                                                 }
                                             }
                                         } catch (e: Exception) {
@@ -178,15 +118,8 @@ class ScanEngine(private val context: Context) {
                     }
 
                     if (fileMatches.isNotEmpty()) {
-                        results.add(
-                            ScanResult(
-                                packageName = pkg,
-                                appName = appName,
-                                matches = fileMatches
-                            )
-                        )
+                        results.add(ScanResult(packageName = pkg, appName = appName, matches = fileMatches))
                     }
-
                     scanned++
                     emit(ScanProgress(scanned, total, pkg, appName, results.toList()))
                 }
@@ -229,8 +162,8 @@ class ScanEngine(private val context: Context) {
         val pm = context.packageManager
         return try {
             pm.getInstalledApplications(PackageManager.GET_META_DATA)
-                .filter { it.sourceDir.isNotEmpty() }
-                .filter { app ->
+                .filter { appInfo: ApplicationInfo -> appInfo.sourceDir.isNotEmpty() }
+                .filter { app: ApplicationInfo ->
                     !skipSystemApps || (app.flags and ApplicationInfo.FLAG_SYSTEM) == 0
                 }
         } catch (e: Exception) {

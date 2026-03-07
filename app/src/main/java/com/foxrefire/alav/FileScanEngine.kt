@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
 import java.util.zip.ZipInputStream
 
 /**
@@ -20,6 +21,7 @@ class FileScanEngine(private val context: Context) {
     companion object {
         private const val TAG = "FileScanEngine"
         private const val MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024 // 20MB per entry
+        private const val IO_BUFFER_SIZE = 256 * 1024 // 256KB for faster I/O
     }
 
     data class FileScanProgress(
@@ -80,25 +82,27 @@ class FileScanEngine(private val context: Context) {
         if (isApk) {
             // Scan the APK file itself (before extraction)
             val maxApkBytes = ScanPreferences.getMaxApkScanSizeBytes(context).toInt().coerceAtLeast(1)
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                val buffer = ByteArray(maxApkBytes)
-                var total = 0
-                while (total < maxApkBytes) {
-                    val n = input.read(buffer, total, maxApkBytes - total)
-                    if (n <= 0) break
-                    total += n
-                }
-                val apkHead = buffer.copyOf(total)
-                if (apkHead.isNotEmpty()) {
-                    val rawMatches = scanner.scan(apkHead).filter { it !in excludedRules }
-                    if (rawMatches.isNotEmpty()) {
-                        fileMatches.add(FileMatch(name, rawMatches))
+            context.contentResolver.openInputStream(uri)?.use { rawInput ->
+                BufferedInputStream(rawInput, IO_BUFFER_SIZE).use { input ->
+                    val buffer = ByteArray(maxApkBytes)
+                    var total = 0
+                    while (total < maxApkBytes) {
+                        val n = input.read(buffer, total, maxApkBytes - total)
+                        if (n <= 0) break
+                        total += n
+                    }
+                    val apkHead = buffer.copyOf(total)
+                    if (apkHead.isNotEmpty()) {
+                        val rawMatches = scanner.scan(apkHead).filter { it !in excludedRules }
+                        if (rawMatches.isNotEmpty()) {
+                            fileMatches.add(FileMatch(name, rawMatches))
+                        }
                     }
                 }
             }
             if (ScanPreferences.getScanApkEntries(context)) {
-                context.contentResolver.openInputStream(uri)?.use { input ->
-                    ZipInputStream(input.buffered()).use { zis ->
+                context.contentResolver.openInputStream(uri)?.use { rawInput ->
+                    ZipInputStream(BufferedInputStream(rawInput, IO_BUFFER_SIZE)).use { zis ->
                         var entry = zis.nextEntry
                         while (entry != null) {
                             if (!entry.isDirectory && entry.size != 0L && (entry.size < 0 || entry.size <= MAX_FILE_SIZE_BYTES)) {
@@ -120,12 +124,14 @@ class FileScanEngine(private val context: Context) {
             }
         } else {
             try {
-                context.contentResolver.openInputStream(uri)?.use { input ->
-                    val data = input.readBytes()
-                    if (data.size <= MAX_FILE_SIZE_BYTES) {
-                        val matches = scanner.scan(data).filter { it !in excludedRules }
-                        if (matches.isNotEmpty()) {
-                            fileMatches.add(FileMatch(name, matches))
+                context.contentResolver.openInputStream(uri)?.use { rawInput ->
+                    BufferedInputStream(rawInput, IO_BUFFER_SIZE).use { input ->
+                        val data = input.readBytes()
+                        if (data.size <= MAX_FILE_SIZE_BYTES) {
+                            val matches = scanner.scan(data).filter { it !in excludedRules }
+                            if (matches.isNotEmpty()) {
+                                fileMatches.add(FileMatch(name, matches))
+                            }
                         }
                     }
                 }
