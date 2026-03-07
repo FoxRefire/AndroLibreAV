@@ -12,13 +12,15 @@ import java.net.URL
 import java.util.zip.ZipInputStream
 
 /**
- * Manages downloading and extracting YARA rules from yara-forge.
+ * Manages downloading and extracting YARA rules from yara-forge and additional sources.
  */
 class RulesRepository(private val context: Context) {
 
     companion object {
         private const val TAG = "RulesRepository"
         const val RULES_URL = "https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-full.zip"
+        /** Additional rules (e.g. alav-additional-rules); extracted into rulesDir after yara-forge. */
+        private const val ADDITIONAL_RULES_URL = "https://github.com/FoxRefire/alav-additional-rules/archive/refs/heads/main.zip"
         private const val RULES_DIR_NAME = "yara_rules"
         private const val CUSTOM_RULES_FILE = "custom_rules.yar"
     }
@@ -51,15 +53,21 @@ class RulesRepository(private val context: Context) {
 
     /**
      * Download the rules ZIP and extract to rulesDir.
-     * Preserves directory structure for include resolution.
-     * @return true on success, false on failure
+     * Fetches both yara-forge and alav-additional-rules. Preserves directory structure for include resolution.
+     * @return success or failure
      */
     suspend fun updateRules(): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
             Log.d(TAG, "Downloading rules from $RULES_URL")
-            val zipFile = downloadZip()
+            val zipFile = downloadZip(RULES_URL, "yara-forge-rules.zip")
             extractZip(zipFile)
             zipFile.delete()
+
+            Log.d(TAG, "Downloading additional rules from $ADDITIONAL_RULES_URL")
+            val additionalZip = downloadZip(ADDITIONAL_RULES_URL, "alav-additional-rules.zip")
+            extractZipIntoExisting(additionalZip, rulesDir)
+            additionalZip.delete()
+
             Log.d(TAG, "Rules updated successfully")
             Unit
         }.onFailure { e ->
@@ -67,8 +75,8 @@ class RulesRepository(private val context: Context) {
         }
     }
 
-    private fun downloadZip(): File {
-        val url = URL(RULES_URL)
+    private fun downloadZip(urlString: String, tempFileName: String): File {
+        val url = URL(urlString)
         val connection = url.openConnection() as HttpURLConnection
         try {
             connection.connectTimeout = 30_000
@@ -81,7 +89,7 @@ class RulesRepository(private val context: Context) {
                 throw RuntimeException("HTTP ${connection.responseCode}: ${connection.responseMessage}")
             }
 
-            val tempFile = File(context.cacheDir, "yara-forge-rules.zip")
+            val tempFile = File(context.cacheDir, tempFileName)
             connection.inputStream.use { input ->
                 FileOutputStream(tempFile).use { output ->
                     input.copyTo(output)
@@ -97,6 +105,14 @@ class RulesRepository(private val context: Context) {
         val destDir = rulesDir
         destDir.mkdirs()
         destDir.listFiles()?.forEach { it.deleteRecursively() }
+        extractZipIntoExisting(zipFile, destDir)
+    }
+
+    /**
+     * Extracts a ZIP into an existing directory without clearing it (for additional rules).
+     */
+    private fun extractZipIntoExisting(zipFile: File, destDir: File) {
+        destDir.mkdirs()
         val destCanonical = destDir.canonicalPath
 
         ZipInputStream(zipFile.inputStream().buffered()).use { zis ->
